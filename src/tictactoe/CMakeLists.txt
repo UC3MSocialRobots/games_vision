@@ -10,6 +10,8 @@ add_library(tic_tac_toe_skill tic_tac_toe_skill.cpp
   ${games_vision_INCLUDE_DIR}/playzone_sequential_user.h)
 target_link_libraries(tic_tac_toe_skill ${catkin_LIBRARIES}
   tic_tac_toe_solver)
+add_dependencies(     tic_tac_toe_skill
+                      ${games_vision_EXPORTED_TARGETS})
 
 add_executable(launcher_tic_tac_toe_skill.exe launcher_tic_tac_toe_skill.cpp)
 target_link_libraries(launcher_tic_tac_toe_skill.exe ${catkin_LIBRARIES}

@@ -1,6 +1,8 @@
 add_library(CHangMan CHangMan.cpp HangmanSolver.cpp)
 target_link_libraries(CHangMan ${catkin_LIBRARIES}
   curl)
+add_dependencies(     CHangMan
+                      ${games_vision_EXPORTED_TARGETS})
 
 add_executable(test_CHangMan.exe test_CHangMan.cpp)
 target_link_libraries(test_CHangMan.exe ${catkin_LIBRARIES} CHangMan)
