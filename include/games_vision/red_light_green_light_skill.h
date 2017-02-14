@@ -121,12 +121,12 @@ protected:
     float sumvals = 0;
     bool use_mask = (!mask.empty());
     const uchar* mask_data;
-    for (int row = 0; row < rows; ++row) {
+    for (unsigned int row = 0; row < rows; ++row) {
       // get the address of row
       const float* depth_data = depth.ptr<float>(row);
       if (use_mask)
         mask_data = mask.ptr<uchar>(row);
-      for (int col = 0; col < cols; ++col) {
+      for (unsigned int col = 0; col < cols; ++col) {
         if (vision_utils::is_nan_depth(depth_data[col]))
           continue;
         if (use_mask && !mask_data[col])

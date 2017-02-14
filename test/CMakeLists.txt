@@ -2,6 +2,9 @@ catkin_add_gtest(     gtest_playzone_find gtest_playzone_find.cpp)
 target_link_libraries(gtest_playzone_find ${catkin_LIBRARIES}
                       playzone_find)
 
+catkin_add_gtest(     gtest_hangman  gtest_hangman.cpp)
+target_link_libraries(gtest_hangman  ${catkin_LIBRARIES} CHangMan)
+
 catkin_add_gtest(     gtest_playzone_sequential_user
                       gtest_playzone_sequential_user.cpp)
 target_link_libraries(gtest_playzone_sequential_user ${catkin_LIBRARIES}

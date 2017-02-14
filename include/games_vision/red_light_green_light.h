@@ -92,7 +92,7 @@ public:
   } // end player_status2string()
   //! the infos stored for each player
   struct Player {
-    Player() : prev_distance(-1), distance(-1), status(PLAYER_UNKNWON) {}
+    Player() : status(PLAYER_UNKNWON), prev_distance(-1), distance(-1) {}
     PlayerName name_at_beginning;
     PlayerName name_in_last_frame; //! for ID swaps
     PlayerStatus status;
@@ -273,7 +273,7 @@ public:
     _game_status = GAME_WATCHING_WALL;
     _green_light_timer.reset();
     // forget about users previous distances and accelerations
-    for (int i = 0; i < nb_players(); ++i) {
+    for (unsigned int i = 0; i < nb_players(); ++i) {
       _players[i].accel = vision_utils::MaskAcceleration();
       _players[i].prev_distance = _players[i].distance = -1;
     }
@@ -458,6 +458,7 @@ protected:
       // stop game
       stop_game();
     }
+    return true;
   } // end check_players_win()
 
   //////////////////////////////////////////////////////////////////////////////

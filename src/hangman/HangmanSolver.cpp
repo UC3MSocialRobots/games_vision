@@ -41,7 +41,6 @@ void HangmanSolver::init(Role role,
 
   ROLE = role;
   game_status = GAME_RUNNING;
-  game_status_in_string = "GAME_RUNNING";
 
   /* init the unknwn word */
   NB_LETTERS_IN_WORD = nb_characters;
@@ -187,7 +186,6 @@ void HangmanSolver::load_dictionnary(const std::string &path) {
 void HangmanSolver::set_game_won_by_finder() {
   ROS_INFO("Game won by finder !!!");
   game_status = GAME_WON_BY_FINDER;
-  game_status_in_string = "GAME_WON_BY_FINDER";
   finder_answer_type = FINDER_ANSWER_GAME_WON_BY_FINDER;
   hanger_answer_type = HANGER_ANSWER_GAME_WON_BY_FINDER;
 }
@@ -198,7 +196,6 @@ void HangmanSolver::set_game_won_by_finder() {
 void HangmanSolver::set_game_lost_by_finder() {
   ROS_INFO("Game lost by finder !!!");
   game_status = GAME_LOST_BY_FINDER;
-  game_status_in_string = "GAME_LOST_BY_FINDER";
   finder_answer_type = FINDER_ANSWER_GAME_LOST_BY_FINDER;
   hanger_answer_type = HANGER_ANSWER_GAME_LOST_BY_FINDER;
 }
@@ -500,7 +497,7 @@ void HangmanSolver::display_word_letters_status() {
     c++;
   }
   m << "]";
-  ROS_INFO("m:'%s'", m.str().c_str() );
+  ROS_INFO("word_letters_status:%s", m.str().c_str() );
 
   /* extensive display */
   //  for (int i = 0; i < 26; ++i) {
@@ -658,7 +655,6 @@ void HangmanSolver::finder_answer_cannot_find() {
   finder_answer_type = FINDER_ANSWER_CANNOT_FIND;
   finder_answer = "";
 
-  game_status_in_string = "FINDER_ANSWER_CANNOT_FIND";
   hanger_answer_type = HANGER_ANSWER_GAME_LOST_BY_FINDER;
   game_status = GAME_LOST_BY_FINDER;
 
@@ -794,7 +790,7 @@ void HangmanSolver::hanger_answer_letter_not_present() {
  * an empty std::vector and an empty std::vector
  */
 void HangmanSolver::hanger_get_answer(HangerAnswer & type,
-                                      std::vector<int> & answer) {
+                                      std::vector<unsigned int> & answer) {
   assert_role_is_hanger("hanger_answer_letter_found()");
   type= hanger_answer_type;
   answer = hanger_answer_position;

@@ -60,6 +60,20 @@ public:
                       HANGER_ANSWER_LETTER_FOUND,
                       HANGER_ANSWER_LETTER_NOT_FOUND };
 
+  //! among : "GAME_RUNNING", "GAME_WON_BY_FINDER", "GAME_LOST_BY_FINDER"
+  static std::string game_status2string(const GameStatus & g) {
+    switch (g) {
+      case GAME_WON_BY_FINDER:
+        return "GAME_WON_BY_FINDER";
+      case GAME_LOST_BY_FINDER:
+        return "GAME_LOST_BY_FINDER";
+      default:
+      case GAME_RUNNING:
+        return "GAME_RUNNING";
+    }
+  }
+
+
   HangmanSolver();
   ~HangmanSolver();
 
@@ -91,6 +105,10 @@ public:
   void finder_receive_data_from_hanger(HangerAnswer &type, std::vector<unsigned int> &answer);
   void finder_compute_next_guess();
   void finder_get_answer(FinderAnswer &type, std::string &answer);
+
+  /* interact when the robot is a hanger - only used for tests to date */
+  void hanger_receive_data_from_finder(FinderAnswer &type, const std::string &answer);
+  void hanger_get_answer(HangerAnswer &type, std::vector<unsigned int> &answer);
 
 protected:
   /* check the fidelity between the available words and the model */
@@ -127,8 +145,6 @@ protected:
   void hanger_get_letter_suggestion(char c);
   void hanger_answer_letter_found();
   void hanger_answer_letter_not_present();
-  void hanger_get_answer(HangerAnswer &type, std::vector<int> &answer);
-  void hanger_receive_data_from_finder(FinderAnswer &type, const std::string &answer);
 
   //////
   ////// static functions
@@ -162,8 +178,6 @@ protected:
   /* status of the game */
   //! among : GAME_RUNNING, GAME_WON_BY_FINDER, GAME_LOST_BY_FINDER
   GameStatus game_status;
-  //! among : "GAME_RUNNING", "GAME_WON_BY_FINDER", "GAME_LOST_BY_FINDER"
-  std::string game_status_in_string;
   //! the number of errors made by the finder
   unsigned int number_of_failures;
   unsigned int number_of_false_word_attempts;
@@ -189,7 +203,7 @@ protected:
   HangerAnswer hanger_answer_type;
   /*! respectively, the vector of the positions of the suggested letter,
      an empty vector and an empty vector */
-  std::vector<int> hanger_answer_position;
+  std::vector<unsigned int> hanger_answer_position;
 };
 
 #endif /*HANGMANSOLVER_H_*/
