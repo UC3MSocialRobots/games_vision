@@ -1,0 +1,26 @@
+<launch>
+<include file="$(find openni_launch)/launch/openni.launch"/>
+
+<!--
+  rosrun image_view image_view image:=/camera/rgb/image_color
+  rosrun vision_utils depth_to_rgb_viewer.exe _input_topic:=/camera/depth/image
+
+  rosbag record /camera/rgb/image_color/compressed /camera/depth/image/compressedDepth
+  rosrun image_view image_view image:=/camera/rgb/image_color compressed
+  rosrun vision_utils depth_to_rgb_viewer.exe _input_topic:=/camera/depth/image _image_transport:=compressedDepth
+-->
+<node pkg="image_view" type="image_view" name="kinect_rgb_viewer" args="image:=/camera/rgb/image_color"/>
+<node pkg="vision_utils" type="depth_to_rgb_viewer.exe"
+        name="kinect_depth_viewer"
+        args="_input_topic:=/camera/depth/image _image_transport:=compressedDepth" />
+
+<!--
+<node pkg="games_vision" type="motion_video_recorder.exe"
+      name="motion_video_recorder"  output="screen"
+      args="_rgb_topic:=/camera/rgb/image_color _depth_topic:=/camera/depth/image
+            _fps:=25  _depth_diff_thres:=.5  _motion_rate_thres:=.05  _static_time_thres:=3" />
+-->
+<node pkg="rosbag" type="record"
+      name="record"  output="screen"
+      args="/camera/rgb/image_color/compressed /camera/depth/image/compressedDepth" />
+</launch>

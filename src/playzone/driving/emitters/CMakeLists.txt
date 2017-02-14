@@ -1,0 +1,11 @@
+add_executable(launcher_driving_emitter_joypad.exe
+  launcher_driving_emitter_joypad.cpp )
+target_link_libraries(launcher_driving_emitter_joypad.exe ${catkin_LIBRARIES})
+
+add_executable(launcher_driving_emitter_playzone.exe
+  launcher_driving_emitter_playzone.cpp )
+target_link_libraries(launcher_driving_emitter_playzone.exe ${catkin_LIBRARIES}
+  playzone_track_skill)
+
+add_executable(launcher_driving_emitter_keyboard.exe launcher_driving_emitter_keyboard.cpp )
+target_link_libraries(launcher_driving_emitter_keyboard.exe ${catkin_LIBRARIES})

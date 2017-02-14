@@ -1,0 +1,30 @@
+<launch>
+<arg name="robot" value="nite_only"/>
+<!-- publish kinect serial -->
+<node pkg="kinect" type="publish_kinect_serial.exe"
+      name="publish_kinect_serial"  output="screen"/>
+
+<node pkg="kinect" type="nite_primitive_standalone"
+      name="nite_primitive_standalone"  output="screen" required="true"
+      args="_rate:=15
+            _kinect_serial_param_name:=kinect_serial_number
+            _display_images_flag:=false
+            _publish_images_flag:=true
+            _publish_skeletons_flag:=false
+            _publish_transforms_flag:=false">
+      <rosparam command='load'
+                file="$(find kinect)/params/kinect_default_params.yaml"/>
+</node>
+<!--
+  rosrun image_view image_view image:=/rgb/image
+  rosrun vision_utils depth_to_rgb_viewer.exe _input_topic:=/depth/image
+-->
+<node pkg="image_view" type="image_view" name="kinect_rgb_viewer" args="image:=/rgb/image"/>
+<node pkg="vision_utils" type="depth_to_rgb_viewer.exe"
+        name="kinect_depth_viewer" args="_input_topic:=/depth/image" />
+
+<node pkg="games_vision" type="motion_video_recorder.exe"
+      name="motion_video_recorder"  output="screen"
+      args="_rgb_topic:=/rgb/image _depth_topic:=/depth/image
+            _fps:=15  _depth_diff_thres:=.1  _motion_rate_thres:=.05  _static_time_thres:=3" />
+</launch>

@@ -1,0 +1,40 @@
+<launch>
+<arg name="robot" default="kinect_only"/>
+<arg name="viewer" default="false"/>
+<arg name="pplp_topic" default="/$(arg robot)/hog_pplp/ppl"/>
+<arg name="use_bag" default="false"/> <!-- true to use a pre-recorded PPL bag -->
+
+<group unless="$(arg use_bag)">
+  <!-- launcher for the robot.
+        It includes the kinect node, that supplies rgb + depth on topics
+       "/$(arg robot)/rgb" and "/$(arg robot)/depth" -->
+  <include file="$(find main_control)/launch/$(arg robot)_start.launch"/>
+  <!-- spawn all PPLP and PPLM, use simple filtering (Euclidean) -->
+  <include file="$(find people_recognition_vision)/launch/ukf_multimodal_lite.launch">
+    <arg name="robot" value="$(arg robot)" />
+<!--
+    <arg name="pplp_use_hog_detector" value="true"/>
+-->
+    <arg name="pplp_use_bg_substractor" value="true"/>
+    <arg name="pplm_use_euclidean"    value="true"/>
+    <arg name="data_fusion_use_ukf"   value="true"/>
+  </include>
+</group>
+
+<group ns="$(arg robot)">
+  <arg name="bagfile" default="/home/arnaud/rosbags/rlgl_arnaud3.bag"/>
+  <node if="$(arg use_bag)" pkg="rosbag" type="play" name="play"  output="log"
+        args="$(arg bagfile) --loop --start=5"
+        />
+
+  <!-- the proper skill  -->
+  <node pkg="games_vision" type="red_light_green_light_skill.exe"
+        name="red_light_green_light_skill"  output="screen"
+        respawn="true"
+        args="_ppl_topic:=ukf_multimodal/ppl  _display:=true  _autostart:=true" />
+
+  <node if="$(arg viewer)" pkg="vision_utils" type="ppl_viewer.exe" name="ppl_viewer"
+        args="_ppl_topics:=$(arg pplp_topic);ukf_multimodal/ppl
+        _reprojection_mode:=yx _ymin:=0 _xmin:=-4 _xmax:=4 _width:=600 _height:=500"/>
+</group>
+</launch>

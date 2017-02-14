@@ -1,0 +1,6 @@
+<launch>
+<node pkg="games_vision" type="test_drawer.exe" name="ping" output="screen"
+      args="_bg_topic:=pong2ping _out_topic:=ping2pong"/>
+<node pkg="games_vision" type="test_drawer.exe" name="pong" output="screen"
+      args="_bg_topic:=ping2pong _out_topic:=pong2ping"/>
+</launch>

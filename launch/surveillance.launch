@@ -1,0 +1,61 @@
+<launch>
+<arg name="robot"/>
+<arg name="eventgui" default="false"/>
+
+<!-- republish Kinect streams -->
+<include file="$(find kinect)/launch/republish_nite_all.launch">
+  <arg name="robot" value="$(arg robot)" />
+</include>
+
+<!-- PPL detector -->
+<!--
+<include file="$(find people_detection_vision)/launch/ppm_pplp.launch">
+-->
+<include file="$(find people_detection_vision)/launch/nite_user_mask_pplp.launch">
+  <arg name="robot" value="$(arg robot)" />
+  <arg name="eventgui" value="$(arg eventgui)" />
+</include>
+
+<!-- viewers -->
+<!--
+<include file="$(find main_control)/launch/viz.launch">
+  <arg name="robot" value="$(arg robot)" />
+</include>
+<include file="$(find kinect)/launch/nite_viewer.launch">
+  <arg name="robot" value="$(arg robot)" />
+</include>
+-->
+
+<group ns="$(arg robot)">
+  <!-- ROS_NAMESPACE=kinect_only rosrun games_vision movement_listener.exe -activate -display -->
+  <node pkg="games_vision" type="movement_listener.exe"
+        name="movement_listener"  output="screen"
+        args="--display _threshold_image_rate_unstable:=0.10" />
+
+  <node pkg="games_vision" type="costmap_stage_editor.exe"
+        name="costmap_stage_editor"  output="screen"
+        args="_ppl_input_topics:=face_detector/ppl;hog_pplp/ppl;nite_user_mask_pplp/ppl
+              _frame_id:=/odom" />
+
+  <node pkg="games_vision" type="costmap_watcher.exe"
+        name="costmap_watcher"  output="screen" respawn="true"
+        args="--display _data_acquisition_by_wait_for_message:=false
+              _ppl_input_topics:=face_detector/ppl;hog_pplp/ppl;nite_user_mask_pplp/ppl"
+              />
+
+  <node pkg="main_control" type="alert_messages_gui.exe"
+        name="alert_messages_gui"  output="screen"
+        args="" />
+
+  <!-- the event interface skill -->
+  <node if="$(arg eventgui)" pkg="ad_core" type="launcher_qt_event_sender_interface.exe"
+        name="cost_event_interface"
+        output="screen"
+        args='event_keys="|MOVEMENTLISTENER_START;MOVEMENTLISTENER_START;0
+                          |MOVEMENTLISTENER_STOP;MOVEMENTLISTENER_STOP;0
+                          |COSTMAP_WATCHER_START;COSTMAP_WATCHER_START;0
+                          |COSTMAP_WATCHER_STOP;COSTMAP_WATCHER_STOP;0
+                          |COSTMAP_STAGE_EDITOR_START;COSTMAP_STAGE_EDITOR_START;0
+                          |COSTMAP_STAGE_EDITOR_STOP;COSTMAP_STAGE_EDITOR_STOP;0"'/>
+</group>
+</launch>

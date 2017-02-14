@@ -1,0 +1,79 @@
+<launch>
+<arg name="robot"/>
+
+<!-- decompress images -->
+<!--
+<include file="$(find camera)/launch/republish_rgb_camera.launch">
+  <arg name="robot" value="$(arg robot)" />
+</include>
+-->
+
+<!-- remap camera frame (local) -->
+<!-- remap from /flori/rgb to /flori_camera/rgb/image_raw  -->
+<remap from="/$(arg robot)/rgb" to="/$(arg robot)_camera/rgb/image_raw"/>
+<include file="$(find camera)/launch/camera_viewer.launch">
+  <arg name="robot" value="$(arg robot)" />
+</include>
+
+
+<group ns="$(arg robot)">
+  <param name= "kinect_serial_number" value="123"/>
+
+  <node pkg="games_vision" type="launcher_playzone_find_skill.exe"
+        name="launcher_playzone_find_skill"  output="screen"
+        args="lang=es" />
+
+  <node pkg="games_vision" type="launcher_tic_tac_toe_skill.exe"
+        name="launcher_tic_tac_toe_skill"  output="screen"
+        args="--display" />
+
+  <node pkg="games_vision" type="launcher_hangman.exe"
+        name="launcher_hangman"  output="screen"
+        args="--display" />
+
+  <node pkg="vision_utils" type="launcher_camera_blocker_skill.exe"
+        name="launcher_camera_blocker_skill"  output="screen"
+        args="_events_list:=TOCADO,8 _events_wait_time:=1.5
+              _threshold_value:=70" />
+
+  <!-- driving -->
+  <node pkg="games_vision" type="launcher_driving_emitter_playzone.exe"
+        name="launcher_driving_emitter_playzone"  output="screen"
+        args="--display" />
+
+  <node pkg="games_vision" type="launcher_driving_wheel.exe"
+        name="launcher_driving_wheel"  output="screen"
+        args="" />
+
+  <node pkg="games_vision" type="launcher_driving_game.exe"
+        name="launcher_driving_game"  output="screen"
+        args="" />
+
+  <node pkg="games_vision" type="launcher_driving_emitter_keyboard.exe"
+        name="launcher_driving_emitter_keyboard"  output="screen"
+        args="" />
+
+  <!-- the event interface skill -->
+  <node pkg="ad_core" type="launcher_qt_event_sender_interface.exe"
+        name="playzones_event_interface"
+        output="screen"
+        args='event_keys="|FIND_PLAYZONE_START;FIND_PLAYZONE_START;0
+                          |FIND_PLAYZONE_STOP;FIND_PLAYZONE_STOP;0
+                          |FIND_PLAYZONE_ANALYZE;FIND_PLAYZONE_ANALYZE;0
+                          |TICTACTOE_START;TICTACTOE_START;0
+                          |TICTACTOE_STOP;TICTACTOE_STOP;0
+                          |HANGMAN_START;HANGMAN_START;0
+                          |HANGMAN_STOP;HANGMAN_STOP;0
+                          |TOCADO;TOCADO;8
+                          |CAMERA_BLOCKER_SKILL_START;CAMERA_BLOCKER_SKILL_START;8
+                          |CAMERA_BLOCKER_SKILL_STOP;CAMERA_BLOCKER_SKILL_STOP;8
+                          |DRIVING_EMITTER_PLAYZONE_START;DRIVING_EMITTER_PLAYZONE_START;0
+                          |DRIVING_EMITTER_PLAYZONE_STOP;DRIVING_EMITTER_PLAYZONE_STOP;0
+                          |DRIVING_EMITTER_KEYBOARD_START;DRIVING_EMITTER_KEYBOARD_START;0
+                          |DRIVING_EMITTER_KEYBOARD_STOP;DRIVING_EMITTER_KEYBOARD_STOP;0
+                          |DRIVINGWHEEL_START;DRIVINGWHEEL_START;0
+                          |DRIVINGWHEEL_STOP;DRIVINGWHEEL_STOP;0
+                          |DRIVINGGAME_START;DRIVINGGAME_START;0
+                          |DRIVINGGAME_STOP;DRIVINGGAME_STOP;0"'/>
+</group>
+</launch>

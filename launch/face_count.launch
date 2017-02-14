@@ -1,0 +1,18 @@
+<launch>
+<arg name="robot"/>
+<arg name="ppl_input_topic" default="face_detector_pplp/ppl"/>
+<arg name="eventgui" default="false"/>
+
+<group ns="$(arg robot)">
+  <node pkg="games_vision" type="launcher_face_count.exe"
+        name="launcher_face_count"  output="screen"
+        args="_ppl_input_topic:=$(arg ppl_input_topic)
+              _equal_face_nb_thres:=3" />
+
+  <!-- event GUI -->
+  <node if="$(arg eventgui)" pkg="ad_core" type="launcher_qt_event_sender_interface.exe"
+        name="face_count_event_gui"  output="screen"
+        args='event_keys="|FACE_COUNT_START;FACE_COUNT_START;0
+                          |FACE_COUNT_STOP;FACE_COUNT_STOP;0"'/>
+</group>
+</launch>

@@ -1,0 +1,6 @@
+# empty request
+---
+# true if getting the playzone was a success
+bool success
+# the real playzone
+sensor_msgs/Image playzone
