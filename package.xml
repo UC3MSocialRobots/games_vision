@@ -18,9 +18,6 @@
   <depend>people_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>tf</depend>
-  <!-- AD:
-      these should be in the dependencies.rosinstall of the package -->
-  <depend>music2sound</depend>
 
   <export>
     <rosdoc config="rosdoc.yaml" /> <!-- http://wiki.ros.org/rosdoc_lite -->

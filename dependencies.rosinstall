@@ -1,0 +1,3 @@
+- git:
+    local-name: cvstage
+    uri: https://github.com/arnaud-ramey/cvstage.git

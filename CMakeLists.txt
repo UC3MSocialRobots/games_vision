@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(games_vision)
 ### 3 - Find other CMake/Catkin packages needed for build
 SET(ROSDEPS  cvstage  image_transport  message_generation
-             music2sound  nav_msgs  people_msgs  sensor_msgs  tf)
+             nav_msgs  people_msgs  sensor_msgs  tf)
 find_package( OpenCV REQUIRED )
 find_package(catkin REQUIRED COMPONENTS ${ROSDEPS})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra") # add extra warnings
@@ -30,7 +30,6 @@ execute_process( # https://cmake.org/cmake/help/v3.0/command/execute_process.htm
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${music2sound_INCLUDE_DIRS}
   /usr/include/ni/
   ${PCL_INCLUDE_DIRS}
 )
