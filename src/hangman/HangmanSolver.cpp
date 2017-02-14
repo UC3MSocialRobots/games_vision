@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 #include "games_vision/HangmanSolver.h"
+#include <ros/ros.h>
 
 /*!
  * \brief   constructor

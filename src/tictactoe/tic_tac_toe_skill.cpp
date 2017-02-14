@@ -8,10 +8,10 @@
  * \date 26/05/2009
  *******************************************************************************/
 
-#include <vision_utils/img_path.h>
-
 #include "games_vision/tic_tac_toe_skill.h"
-
+// vision_utils
+#include <vision_utils/img_path.h>
+#include <vision_utils/infosimage.h>
 #include "vision_utils/connected_comp_interface.h"
 #include "vision_utils/timer.h"
 
@@ -26,8 +26,8 @@ TicTacToeSkill::TicTacToeSkill() :
 
   // init the comparer - ensure it is in the same order as CellContent
   std::vector<std::string> pawn_imgs;
-  pawn_imgs.push_back(IMG_DIR "tictactoe/emptyRound.png"); // index 0
-  pawn_imgs.push_back(IMG_DIR "tictactoe/cross.png"); //      index 1
+  pawn_imgs.push_back(vision_utils::IMG_DIR()+"tictactoe/emptyRound.png"); // index 0
+  pawn_imgs.push_back(vision_utils::IMG_DIR()+"tictactoe/cross.png"); //      index 1
   comparer.set_models(pawn_imgs, cv::Size(32, 32));
   assert(comparer.get_models_nb() == 2);
 }

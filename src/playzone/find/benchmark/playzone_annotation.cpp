@@ -1,4 +1,7 @@
 #include "games_vision/playzone_annotation.h"
+#include "vision_utils/permutation.h"
+#include "vision_utils/find_closest_points_brute_force.h"
+#include <ros/ros.h>
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -27,13 +30,14 @@ const {
 ///////////////////////////////////////////////////////////////////////
 
 void PlayzoneAnnotation::
-from_xml_node_custom(const XmlDocument & doc, XmlDocument::Node* node) {
+from_xml_node_custom(const vision_utils::XmlDocument & doc,
+                     vision_utils::XmlDocument::Node* node) {
     ROS_INFO("from_xml_node()");
     // load the corners
-    std::vector<XmlDocument::Node*> corner_nodes;
+    std::vector<vision_utils::XmlDocument::Node*> corner_nodes;
     doc.get_all_nodes_at_direction(node, "corner", corner_nodes);
     corners.clear();
-    for (std::vector<XmlDocument::Node*>::const_iterator corner = corner_nodes.begin();
+    for (std::vector<vision_utils::XmlDocument::Node*>::const_iterator corner = corner_nodes.begin();
          corner != corner_nodes.end() ; ++corner) {
         double x = doc.get_node_attribute<double>(*corner, "x", -1);
         double y = doc.get_node_attribute<double>(*corner, "y", -1);
@@ -44,12 +48,12 @@ from_xml_node_custom(const XmlDocument & doc, XmlDocument::Node* node) {
 ///////////////////////////////////////////////////////////////////////
 
 void PlayzoneAnnotation::
-to_xml_node_custom(XmlDocument & doc, XmlDocument::Node* node) const {
+to_xml_node_custom(vision_utils::XmlDocument & doc, vision_utils::XmlDocument::Node* node) const {
     ROS_INFO("to_xml_node()");
     // save the corners
     for (CornerList::const_iterator corner = corners.begin();
          corner != corners.end() ; ++corner) {
-        XmlDocument::Node* corner_node = doc.add_node(node, "corner", "");
+        vision_utils::XmlDocument::Node* corner_node = doc.add_node(node, "corner", "");
         doc.set_node_attribute(corner_node, "x", corner->x);
         doc.set_node_attribute(corner_node, "y", corner->y);
     } // end loop corners

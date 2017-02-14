@@ -26,10 +26,12 @@ public:
     const;
 
     //! \see XmlImagesReader::from_xml_node_custom()
-    void from_xml_node_custom(const XmlDocument & doc, XmlDocument::Node* node);
+    void from_xml_node_custom(const vision_utils::XmlDocument & doc,
+                              vision_utils::XmlDocument::Node* node);
 
     //! \see XmlImagesReader::to_xml_node_custom()
-    void to_xml_node_custom(XmlDocument & doc, XmlDocument::Node* node) const;
+    void to_xml_node_custom(vision_utils::XmlDocument & doc,
+                            vision_utils::XmlDocument::Node* node) const;
 
 
 protected:

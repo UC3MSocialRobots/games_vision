@@ -291,13 +291,13 @@ TEST(TestSuite, simple_game_david_arnaud) {
   std::vector<cv::Mat1b> player_masks;
   std::vector<cv::Point> masks_offsets;
   std::vector<unsigned int> pp_indices;
-  std::string filename_prefix = IMG_DIR "depth/david_arnaud1";
+  std::string filename_prefix = vision_utils::IMG_DIR()+"depth/david_arnaud1";
   ASSERT_TRUE(images2ppl.convert(filename_prefix));
-  ASSERT_TRUE(vision_utils::vision_utils::convert(images2ppl.get_ppl(),
-                                             NULL, NULL, &player_masks,
-                                             &masks_offsets, &pp_indices));
-  ASSERT_TRUE(vision_utils::vision_utils::indices2names(images2ppl.get_ppl(),
-                                                   pp_indices, names));
+  ASSERT_TRUE(vision_utils::convert(images2ppl.get_ppl(),
+                                    NULL, NULL, &player_masks,
+                                    &masks_offsets, &pp_indices));
+  ASSERT_TRUE(vision_utils::indices2names(images2ppl.get_ppl(),
+                                          pp_indices, names));
   ASSERT_TRUE(names.size() == 2);
 
   // set players at start line
@@ -321,13 +321,13 @@ TEST(TestSuite, simple_game_david_arnaud) {
   }
 
   // now use an image that is close
-  filename_prefix = IMG_DIR "depth/david_arnaud3";
+  filename_prefix = vision_utils::IMG_DIR()+"depth/david_arnaud3";
   ASSERT_TRUE(images2ppl.convert(filename_prefix));
-  ASSERT_TRUE(vision_utils::vision_utils::convert(images2ppl.get_ppl(),
-                                             NULL, NULL, &player_masks,
-                                             &masks_offsets, &pp_indices));
-  ASSERT_TRUE(vision_utils::vision_utils::indices2names(images2ppl.get_ppl(),
-                                                   pp_indices, names));
+  ASSERT_TRUE(vision_utils::convert(images2ppl.get_ppl(),
+                                    NULL, NULL, &player_masks,
+                                    &masks_offsets, &pp_indices));
+  ASSERT_TRUE(vision_utils::indices2names(images2ppl.get_ppl(),
+                                          pp_indices, names));
 
   // player 1 should still go to start
   for (int i = 0; i < 10; ++i) {

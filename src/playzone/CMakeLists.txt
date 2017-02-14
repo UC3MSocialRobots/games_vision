@@ -1,4 +1,3 @@
 ADD_SUBDIRECTORY(find)
 ADD_SUBDIRECTORY(track)
-ADD_SUBDIRECTORY(driving)
 ADD_SUBDIRECTORY(playzone_sequential_user)

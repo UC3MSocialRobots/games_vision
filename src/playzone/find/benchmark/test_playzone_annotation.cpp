@@ -1,4 +1,5 @@
 #include "games_vision/playzone_annotation.h"
+#include <ros/ros.h>
 
 /** test */
 void test_annotation() {
@@ -9,8 +10,8 @@ void test_annotation() {
         annotation.add_corner(PlayzoneAnnotation::Corner
                               (corner_idx, corner_idx * corner_idx));
 
-    XmlDocument doc;
-    XmlDocument::Node* node = doc.add_node(doc.root(), "annot", "");
+    vision_utils::XmlDocument doc;
+    vision_utils::XmlDocument::Node* node = doc.add_node(doc.root(), "annot", "");
 
     annotation.to_xml_node_custom(doc, node);
     ROS_WARN("doc:\n'%s'", doc.to_string().c_str());

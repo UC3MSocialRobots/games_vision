@@ -94,7 +94,7 @@ private:
   /////
   ///// comparer
   /////
-  ImageComparer comparer;
+  vision_utils::ImageComparer comparer;
 
   /////
   ///// game

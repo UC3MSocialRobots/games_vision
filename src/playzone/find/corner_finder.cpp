@@ -1,11 +1,19 @@
 
 // maggie
+#include "games_vision/playzone_find.h"
 #include "games_vision/corner_finder.h"
+#include "vision_utils/absolute_angle_between_three_points.h"
+#include "vision_utils/barycenter_of_two_points.h"
+#include "vision_utils/distance_point_polygon.h"
+#include "vision_utils/point_inside_polygon.h"
+#include "vision_utils/rand_gaussian.h"
+#include "vision_utils/rotate_dilate_polygon.h"
+#include "vision_utils/drawListOfPoints.h"
+#include "vision_utils/line_equation.h"
+#include "vision_utils/interLine.h"
+// include find playzone for the options
 // opencv
 #include <opencv2/imgproc/imgproc.hpp>
-
-// include find playzone for the options
-#include "games_vision/playzone_find.h"
 
 #define DEBUG_PRINT(...)   {}
 //#define DEBUG_PRINT(...)   ROS_INFO_THROTTLE(5, __VA_ARGS__)

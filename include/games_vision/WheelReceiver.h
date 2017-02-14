@@ -19,7 +19,7 @@ public:
 
   /*! the time after which we consider the reception as bad
     and return 0 for speed and angle */
-  const static Timer::Time TIMEOUT_MS = 1000;
+  const static vision_utils::Timer::Time TIMEOUT_MS = 1000;
 
   WheelReceiver()  {
     speed_module = 0;
@@ -94,7 +94,7 @@ protected:
   }
 
   ros::Subscriber _angle_sub, _speed_sub;
-  Timer time_last_data;
+  vision_utils::Timer time_last_data;
   int speed_module;
   int wheel_angle;
 };

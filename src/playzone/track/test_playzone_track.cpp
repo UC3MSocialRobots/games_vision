@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
   nh_private.param("mode", mode, mode);
   // the file that goes with the mode
   //std::string filename = IMG_DIR "snoopy.avi";
-  std::string filename = IMG_DIR "powerXML/power2.png";
+  std::string filename = vision_utils::IMG_DIR()+"powerXML/power2.png";
   nh_private.param("filename", filename, filename);
 
   // create the PlayzoneTrack

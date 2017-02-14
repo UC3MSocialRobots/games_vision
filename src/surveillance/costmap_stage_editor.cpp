@@ -54,15 +54,21 @@ It also displays the detected poses of the users.
         The costmap we will both subscribe to and republish.
  */
 
-#include "cvstage/cvstage.h"
-#include "cvstage/plugins/draw_costmap.h"
-#include "vision_utils/multi_subscriber.h"
-#include "vision_utils/nano_skill.h"
+// ROS
+#include <tf/transform_listener.h>
 // people_msgs
 #include <people_msgs/People.h>
+// vision_utils
+#include "cvstage/cvstage.h"
+#include "cvstage/plugins/draw_costmap.h"
+#include "vision_utils/drawCross.h"
+#include "vision_utils/is_point_in_costmap.h"
+#include "vision_utils/multi_subscriber.h"
+#include "vision_utils/nano_skill.h"
+#include "vision_utils/ppl_tf_utils.h"
+#include "vision_utils/toggle_point_in_costmap.h"
 
-
-class CostmapStageEditor : public NanoSkill {
+class CostmapStageEditor : public vision_utils::NanoSkill {
 public:
   CostmapStageEditor()
     : NanoSkill("COSTMAP_STAGE_EDITOR_START", "COSTMAP_STAGE_EDITOR_STOP") {
@@ -92,7 +98,7 @@ public:
     _map_sub = _nh_public.subscribe(_costmap_topic, 1,
                                    &CostmapStageEditor::costmap_cb, this);
     _map_pub = _nh_public.advertise<nav_msgs::GridCells>(_costmap_topic, 1, true);
-    _ppl_subs = ros::MultiSubscriber::subscribe
+    _ppl_subs = vision_utils::MultiSubscriber::subscribe
         (_nh_public, _ppl_input_topics, 1,
          &CostmapStageEditor::ppl_cb, this);
     ROS_WARN("CostmapStageEditor: "
@@ -147,11 +153,11 @@ public:
     // draw people
     cv::Scalar people_color = CV_RGB(255, 0, 0);
     for (unsigned int people_idx = 0; people_idx < _ppl.people.size(); ++people_idx) {
-      geometry_msgs::Pose pose = _ppl.people[people_idx].position;
-      vision_utils::drawCross(_ms.get_viz(), _ms.world2pixel(pose.position),
+      geometry_msgs::Point pose = _ppl.people[people_idx].position;
+      vision_utils::drawCross(_ms.get_viz(), _ms.world2pixel(pose),
                              3, people_color, 2);
       cv::putText(_ms.get_viz(), _ppl.people[people_idx].name,
-                  _ms.world2pixel(pose.position) + cv::Point(10, 0),
+                  _ms.world2pixel(pose) + cv::Point(10, 0),
                   CV_FONT_HERSHEY_PLAIN, 1, people_color);
     } // end loop people_idx
   } // end redraw_ministage_display();
@@ -227,7 +233,7 @@ protected:
   ros::Subscriber _map_sub;
 
   std::string _ppl_input_topics;
-  ros::MultiSubscriber _ppl_subs;
+  vision_utils::MultiSubscriber _ppl_subs;
   people_msgs::People _ppl;
   MiniStage _ms;
   std::string _frame_id;

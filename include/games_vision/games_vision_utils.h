@@ -6,6 +6,7 @@
 #include <sstream>          // for std::sstreams
 #include <fstream>          // for std::sstreams
 #include <limits>
+#include "vision_utils/hausdorff_distances.h"
 
 /*!
  \param path
@@ -133,7 +134,7 @@ D22_with_min(const Pt2Iterable & A, const Pt2Iterable & B,
   unsigned int nA = A.size(), nB = B.size();
   double min_A = min * nA, sum_A = 0;
   for (unsigned int idx_A = 0; idx_A < nA; ++idx_A) {
-    sum_A += dist_pt_set( A[idx_A], B, dist_func_ptr);
+    sum_A += vision_utils::dist_pt_set( A[idx_A], B, dist_func_ptr);
     if (sum_A > min_A)
       return std::numeric_limits<typename _Pt2::value_type>::max();
   } // end loop A
@@ -141,7 +142,7 @@ D22_with_min(const Pt2Iterable & A, const Pt2Iterable & B,
 
   double min_B = min * nB, sum_B = 0;
   for (unsigned int idx_B = 0; idx_B < nB; ++idx_B) {
-    sum_B += dist_pt_set( B[idx_B], A, dist_func_ptr);
+    sum_B += vision_utils::dist_pt_set( B[idx_B], A, dist_func_ptr);
     if (sum_B > min_B)
 
       return std::numeric_limits<typename _Pt2::value_type>::max();

@@ -24,7 +24,10 @@ Implementation of the kid's game "red light, green light" for a
 social robot with a kinect camera.
  */
 #include "vision_utils/mask_acceleration.h"
+#include "vision_utils/linear_assign.h"
+#include "vision_utils/iterable_to_string.h"
 #include "vision_utils/centroid.h"
+#include "vision_utils/cmatrix.h"
 
 class RedLightGreenLight {
 public:
@@ -94,9 +97,9 @@ public:
     PlayerName name_in_last_frame; //! for ID swaps
     PlayerStatus status;
     PlayerDistance prev_distance, distance;
-    MaskAcceleration accel;
-    Timer last_seen_timer;
-    Timer last_go2start_timer;
+    vision_utils::MaskAcceleration accel;
+    vision_utils::Timer last_seen_timer;
+    vision_utils::Timer last_go2start_timer;
     cv::Mat3b display_image;
     inline friend std::ostream& operator<<(std::ostream& s, const Player& p) {
       s << p.name_at_beginning
@@ -271,7 +274,7 @@ public:
     _green_light_timer.reset();
     // forget about users previous distances and accelerations
     for (int i = 0; i < nb_players(); ++i) {
-      _players[i].accel = MaskAcceleration();
+      _players[i].accel = vision_utils::MaskAcceleration();
       _players[i].prev_distance = _players[i].distance = -1;
     }
   } // end start_looking_wall()
@@ -305,8 +308,9 @@ public:
       cv::Mat3b* display_image = &(player->display_image);
       display_image->create(player_masks[player_idx].size());
       display_image->setTo(bg_color);
-      MaskAcceleration* player_acc = &(player->accel);
-      player_acc->draw_illus(*display_image, MaskAcceleration::DEFAULT_ACC_DRAWING_SCALE,
+      vision_utils::MaskAcceleration* player_acc = &(player->accel);
+      player_acc->draw_illus(*display_image,
+                             vision_utils::MaskAcceleration::DEFAULT_ACC_DRAWING_SCALE,
                              bg_color);
       printf("Player '%s', mask size:%ix%i, display size:%ix%i\n",
              player_name.c_str(),
@@ -336,7 +340,7 @@ protected:
                              + masks_offsets[i]);
     } // end for i
     // generate cost matrix
-    CMatrix<vision_utils::Cost> costs(prev_nplayers, curr_nplayers);
+    vision_utils::CMatrix<vision_utils::Cost> costs(prev_nplayers, curr_nplayers);
     costs.set_to_zero();
     for (unsigned int prev_i = 0; prev_i < prev_nplayers; ++prev_i) {
       for (unsigned int curr_i = 0; curr_i < curr_nplayers; ++curr_i) {
@@ -403,11 +407,12 @@ protected:
         player->status = PLAYER_COMPUTATION_ERROR;
         return false;
       }
-      const MaskAcceleration* player_acc = &(player->accel);
-      std::vector<MaskAcceleration::PixelAcceleration> accs = player_acc->get_pixel_accelerations();
+      const vision_utils::MaskAcceleration* player_acc = &(player->accel);
+      std::vector<vision_utils::MaskAcceleration::PixelAcceleration> accs
+          = player_acc->get_pixel_accelerations();
       unsigned int naccs = accs.size();
       for (unsigned int acc_idx = 0; acc_idx < naccs; ++acc_idx) {
-        MaskAcceleration::PixelAcceleration* acc = &(accs[acc_idx]);
+        vision_utils::MaskAcceleration::PixelAcceleration* acc = &(accs[acc_idx]);
         if (acc->norm <= acc_threshold_for_motion) // no motion
           continue;
         moved_in_last_frame = true;
@@ -421,7 +426,7 @@ protected:
       player->status = PLAYER_MUST_GO2START;
       // speak: send player to start line
       printf("RedLightGreenLight: Player '%s' has moved!\n", player_name.c_str());
-      Timer* last_go2start_timer = &(player->last_go2start_timer);
+      vision_utils::Timer* last_go2start_timer = &(player->last_go2start_timer);
       if (last_go2start_timer->getTimeSeconds() < TIME_PLAYERS2START_ORDER_TIMEOUT_SECONDS) // shut up
         return false;
       last_go2start_timer->reset();
@@ -548,6 +553,6 @@ protected:
 
   std::vector<Player> _players;
   GameStatus _game_status;
-  Timer _green_light_timer, _red_light_timer, _last_players2start_order_sent;
+  vision_utils::Timer _green_light_timer, _red_light_timer, _last_players2start_order_sent;
   std::string _last_players2start_list;
 }; // end RedLightGreenLight

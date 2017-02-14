@@ -1,19 +1,22 @@
 #ifndef FIND_PLAYZONE_SKILL_H
 #define FIND_PLAYZONE_SKILL_H
 
-#include "vision_utils/nano_skill.h"
-#include "vision_utils/nano_etts_api.h"
-#include "games_vision/playzone_find.h"
 #include <opencv2/highgui/highgui.hpp>
+// ROS
 #include <cv_bridge/cv_bridge.h>
 #include <image_transport/image_transport.h>
 #include <sensor_msgs/image_encodings.h>
 #include <std_msgs/String.h>
+// AD
+#include "vision_utils/nano_skill.h"
+#include "vision_utils/nano_etts_api.h"
+// games_vision
+#include "games_vision/playzone_find.h"
 
 /*! \class  PlayzoneFindSkill
  *
  */
-class PlayzoneFindSkill : public NanoSkill {
+class PlayzoneFindSkill : public vision_utils::NanoSkill {
 public:
   /*! constructor */
   PlayzoneFindSkill(const int BOARD_OUT_WIDTH_ = 400,
@@ -46,7 +49,7 @@ protected:
   /** the results */
   void sayResult(int method, double t);
 
-  NanoEttsApi _etts_api;
+  vision_utils::NanoEttsApi _etts_api;
 
   ros::Subscriber _pz_analyze_sub;
   std::string _image_resolved_topic;

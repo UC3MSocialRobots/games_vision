@@ -26,13 +26,17 @@
 //#define USE_TWO_PATTERNS
 
 ///// my imports
-#include "vision_utils/hausdorff_distances.h"
 #include "games_vision/playzone_find.h"
-
-
+// vision_utils
+#include "vision_utils/barycenter4.h"
+#include "vision_utils/color_utils.h"
+#include "vision_utils/drawListOfPoints.h"
+#include "vision_utils/hausdorff_distances.h"
+#include "vision_utils/hausdorff_distances.h"
 #include <vision_utils/img_path.h>
+#include "vision_utils/nonNulPoints.h"
+#include "vision_utils/redimContent.h"
 #include "vision_utils/user_image_to_rgb.h"
-
 // opencv
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -50,15 +54,15 @@ PlayzoneFind::Times::Times() {
 ///////////////////////////////////////////////////////////////////////
 
 void PlayzoneFind::Times::clear_times() {
-  t01_after_thresh_image = Timer::NOTIME;
-  t02_after_numeroteComponents = Timer::NOTIME;
-  t03_after_compareComponents = Timer::NOTIME;
-  t04_after_getCorners = Timer::NOTIME;
-  t05_after_saving_images = Timer::NOTIME;
-  t06_after_removeBorder2 = Timer::NOTIME;
-  t07_after_calc_warp_matrix = Timer::NOTIME;
-  t08_after_rectif_image = Timer::NOTIME;
-  t_after_everything = Timer::NOTIME;
+  t01_after_thresh_image = vision_utils::Timer::NOTIME;
+  t02_after_numeroteComponents = vision_utils::Timer::NOTIME;
+  t03_after_compareComponents = vision_utils::Timer::NOTIME;
+  t04_after_getCorners = vision_utils::Timer::NOTIME;
+  t05_after_saving_images = vision_utils::Timer::NOTIME;
+  t06_after_removeBorder2 = vision_utils::Timer::NOTIME;
+  t07_after_calc_warp_matrix = vision_utils::Timer::NOTIME;
+  t08_after_rectif_image = vision_utils::Timer::NOTIME;
+  t_after_everything = vision_utils::Timer::NOTIME;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -165,9 +169,9 @@ void PlayzoneFind::find_playzone_init() {
 
   /* define model_points with the non null pts */
   std::vector<std::string> model_image_filenames;
-  model_image_filenames.push_back(IMG_DIR "board/shape_flat.png");
+  model_image_filenames.push_back(vision_utils::IMG_DIR() + "board/shape_flat.png");
 #ifdef USE_TWO_PATTERNS
-  model_image_filenames.push_back(IMG_DIR "board/shape_twist.png");
+  model_image_filenames.push_back(vision_utils::IMG_DIR() + "board/shape_twist.png");
 #endif // USE_TWO_PATTERNS
 
   model_points.clear();
@@ -704,7 +708,7 @@ void PlayzoneFind::compareComponents() {
     /* compute the distance witht the model and keep if is the best */
     for (unsigned int model_idx = 0; model_idx < model_points.size(); ++model_idx) {
 
-      double dist = hausdorff_distances::D22_with_min<cv::Point, Component>
+      double dist = vision_utils::D22_with_min<cv::Point, Component>
           (model_points[model_idx],
            current_component_resized,
            best_component_mark

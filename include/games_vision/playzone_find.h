@@ -166,8 +166,8 @@ protected:
       with only one warpPerspective */
   void removeBorder2();
 
-  Timer global_timer;
-  Timer step_timer;
+  vision_utils::Timer global_timer;
+  vision_utils::Timer step_timer;
   Status _current_status;
 
   //! the time needed for the current processing
@@ -188,7 +188,7 @@ protected:
   cv::Mat1b frame_thres;
 
   int nbComponents;
-  DisjointSets2 set;
+  vision_utils::DisjointSets2 set;
   std::vector< Component > components_pts;
 #ifndef USE_CONTOURS
   std::vector<cv::Rect> boundingBoxes;

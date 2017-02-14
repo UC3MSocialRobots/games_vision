@@ -14,7 +14,7 @@
 #include "games_vision/playzone_track.h"
 #include "vision_utils/rgb_skill.h"
 
-class PlayzoneTrackSkill : public PlayzoneTrack, public RgbSkill  {
+class PlayzoneTrackSkill : public PlayzoneTrack, public vision_utils::RgbSkill  {
 public:
   /** constructor */
   PlayzoneTrackSkill(int BOARD_OUT_WIDTH_,

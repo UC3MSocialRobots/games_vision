@@ -9,6 +9,10 @@
  *******************************************************************************/
 
 #include "games_vision/CHangMan.h"
+#include "vision_utils/connectedcomponents2.h"
+#include "vision_utils/bboxes_included.h"
+#include "vision_utils/redimContent.h"
+#include "vision_utils/color_utils.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

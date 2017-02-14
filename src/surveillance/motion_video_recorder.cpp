@@ -21,18 +21,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ________________________________________________________________________________
  */
 
-// boost
-
-
-// utils
-#include "vision_utils/timer.h"
-#include "vision_utils/timestamp.h"
-// images
+// C
+#include <stdlib.h> // for atoi
+// OpenCV
+#include <opencv2/highgui/highgui.hpp>
+// ROS msgs
 #include <sensor_msgs/image_encodings.h>
 #include <cv_bridge/cv_bridge.h>
-
 // from http://answers.ros.org/question/9705/synchronizer-and-image_transportsubscriber/
 #include <image_transport/image_transport.h>
+// AD
+#include "vision_utils/timer.h"
+#include "vision_utils/timestamp.h"
+#include "vision_utils/depth_image_to_vizualisation_color_image.h"
 
 // params
 std::string _rgb_topic, _depth_topic, _video_name;
@@ -46,7 +47,7 @@ bool rgb_sub_active = false;
 cv_bridge::CvImageConstPtr _rgb_ptr, _depth_ptr;
 // depth comparing
 cv::Mat1f _ref_depth, _depth_diff;
-Timer _static_timer, _last_frame;
+vision_utils::Timer _static_timer, _last_frame;
 double _motion_rate;
 // video writing
 cv::Mat3b _collage, _collage_rgb, _collage_depth;

@@ -11,11 +11,13 @@
   <!-- dependencies -->
   <buildtool_depend>catkin</buildtool_depend>
   <!-- ROS dependencies -->
-  <depend>cv_bridge</depend>
+  <depend>cvstage</depend>
   <depend>image_transport</depend>
   <depend>message_generation</depend>
+  <depend>nav_msgs</depend>
   <depend>people_msgs</depend>
   <depend>sensor_msgs</depend>
+  <depend>tf</depend>
   <!-- AD:
       these should be in the dependencies.rosinstall of the package -->
   <depend>music2sound</depend>

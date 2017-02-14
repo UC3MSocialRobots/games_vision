@@ -14,7 +14,7 @@
  *******************************************************************************/
 
 ///// my imports
-#include "games_vision/image_comparer.h"
+#include "vision_utils/image_comparer.h"
 #include "games_vision/playzone_sequential_user.h"
 #include "games_vision/HangmanSolver.h"
 
@@ -114,7 +114,7 @@ private:
   bool recognize_letters();
 
   //! the comparer between the monochrome letter points and the real letters
-  ImageComparer comparer;
+  vision_utils::ImageComparer comparer;
 
   //! the model_mask of the forbidden letters
   std::vector<bool> letters_forbidden;

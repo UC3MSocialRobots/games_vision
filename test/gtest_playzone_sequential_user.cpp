@@ -25,9 +25,11 @@ ________________________________________________________________________________
 // Bring in gtest
 #include <gtest/gtest.h>
 #include <vision_utils/rosmaster_alive.h>
+#include <vision_utils/img_path.h>
+#include <vision_utils/timer.h>
 #include "games_vision/playzone_sequential_user.h"
 #include "games_vision/playzone_find_skill.h"
-#include <vision_utils/img_path.h>
+
 #define ASSERT_TRUE_TIMEOUT(cond, timeout) { vision_utils::Timer timer; while (timer.getTimeSeconds() < timeout && !(cond)) usleep(50 * 1000); } ASSERT_TRUE(cond)
 
 //#define DISPLAY
@@ -176,29 +178,29 @@ void test_single_img(const std::string & filename,
 
 // failures
 TEST(TestSuite, test_single_img_nopz) {
-  test_single_img(IMG_DIR "balloon.png", PlayzoneSequentialUser::FAILURE_NO_PZ);
+  test_single_img(vision_utils::IMG_DIR() + "balloon.png", PlayzoneSequentialUser::FAILURE_NO_PZ);
 }
 TEST(TestSuite, test_single_img39) {
-  test_single_img(IMG_DIR "pz/pz39.jpg", PlayzoneSequentialUser::FAILURE_NO_PZ);
+  test_single_img(vision_utils::IMG_DIR() + "pz/pz39.jpg", PlayzoneSequentialUser::FAILURE_NO_PZ);
 }
 //successes
 TEST(TestSuite, test_single_img01) {
-  test_single_img(IMG_DIR "pz/pz01.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
+  test_single_img(vision_utils::IMG_DIR() + "pz/pz01.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
 }
 TEST(TestSuite, test_single_img08) {
-  test_single_img(IMG_DIR "pz/pz08.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
+  test_single_img(vision_utils::IMG_DIR() + "pz/pz08.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
 }
 TEST(TestSuite, test_single_img09) {
-  test_single_img(IMG_DIR "pz/pz09.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
+  test_single_img(vision_utils::IMG_DIR() + "pz/pz09.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
 }
 TEST(TestSuite, test_single_img10) {
-  test_single_img(IMG_DIR "pz/pz10.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
+  test_single_img(vision_utils::IMG_DIR() + "pz/pz10.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
 }
 TEST(TestSuite, test_single_img11) {
-  test_single_img(IMG_DIR "pz/pz11.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
+  test_single_img(vision_utils::IMG_DIR() + "pz/pz11.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
 }
 TEST(TestSuite, test_single_img12) {
-  test_single_img(IMG_DIR "pz/pz12.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
+  test_single_img(vision_utils::IMG_DIR() + "pz/pz12.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

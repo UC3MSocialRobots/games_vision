@@ -39,7 +39,7 @@ social robot with a kinect camera and making use of the interface People
 #ifndef DRAWER_H_
 #define DRAWER_H_
 
-#include "games_vision/nano_skill.h"
+#include "vision_utils/nano_skill.h"
 #include <image_transport/image_transport.h>
 // opencv
 #include <cv_bridge/cv_bridge.h>
@@ -47,7 +47,7 @@ social robot with a kinect camera and making use of the interface People
 // C++
 #include <vector>
 
-class Drawer: public NanoSkill {
+class Drawer: public vision_utils::NanoSkill {
 public:
   // some definitions and aliases
   typedef cv::Scalar PenColor;

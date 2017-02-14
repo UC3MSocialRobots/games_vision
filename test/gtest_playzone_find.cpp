@@ -54,11 +54,11 @@ TEST(TestSuite, black_img) { test_fail(cv::Mat3b(640, 480, cv::Vec3b(0, 0, 0)),
                                        PlayzoneFind::FAILURE_NO_GOOD_COMP); }
 TEST(TestSuite, white_img) { test_fail(cv::Mat3b(640, 480, cv::Vec3b(255, 255, 255)),
                                        PlayzoneFind::FAILURE_NO_GOOD_COMP); }
-TEST(TestSuite, arnaud001) { test_fail(cv::imread(IMG_DIR "arnaud001.png", CV_LOAD_IMAGE_COLOR),
+TEST(TestSuite, arnaud001) { test_fail(cv::imread(vision_utils::IMG_DIR() + "arnaud001.png", CV_LOAD_IMAGE_COLOR),
                                        PlayzoneFind::FAILURE_NO_GOOD_COMP); }
 
 ////////////////////////////////////////////////////////////////////////////////
-inline void test_success(const std::string filename = IMG_DIR "pz/pz05.jpg") {
+inline void test_success(const std::string filename = vision_utils::IMG_DIR() + "pz/pz05.jpg") {
   if (!vision_utils::rosmaster_alive()) return;
   cv::Mat3b test_img = cv::imread(filename);
   PlayzoneFind finder (300, 300);
@@ -77,16 +77,16 @@ inline void test_success(const std::string filename = IMG_DIR "pz/pz05.jpg") {
   ASSERT_TRUE(corners.size() == 4);
 }
 
-TEST(TestSuite, pz01) { test_success(IMG_DIR "pz/pz01.jpg"); }
-TEST(TestSuite, pz08) { test_success(IMG_DIR "pz/pz08.jpg"); }
-TEST(TestSuite, pz09) { test_success(IMG_DIR "pz/pz09.jpg"); }
-TEST(TestSuite, pz10) { test_success(IMG_DIR "pz/pz10.jpg"); }
-TEST(TestSuite, pz11) { test_success(IMG_DIR "pz/pz11.jpg"); }
-TEST(TestSuite, pz12) { test_success(IMG_DIR "pz/pz12.jpg"); }
-TEST(TestSuite, pz40) { test_success(IMG_DIR "pz/pz40.jpg"); }
-TEST(TestSuite, tictactoe_frame) { test_success(IMG_DIR "tictactoe/sample_frame.jpg"); }
+TEST(TestSuite, pz01) { test_success(vision_utils::IMG_DIR() + "pz/pz01.jpg"); }
+TEST(TestSuite, pz08) { test_success(vision_utils::IMG_DIR() + "pz/pz08.jpg"); }
+TEST(TestSuite, pz09) { test_success(vision_utils::IMG_DIR() + "pz/pz09.jpg"); }
+TEST(TestSuite, pz10) { test_success(vision_utils::IMG_DIR() + "pz/pz10.jpg"); }
+TEST(TestSuite, pz11) { test_success(vision_utils::IMG_DIR() + "pz/pz11.jpg"); }
+TEST(TestSuite, pz12) { test_success(vision_utils::IMG_DIR() + "pz/pz12.jpg"); }
+TEST(TestSuite, pz40) { test_success(vision_utils::IMG_DIR() + "pz/pz40.jpg"); }
+TEST(TestSuite, tictactoe_frame) { test_success(vision_utils::IMG_DIR() + "tictactoe/sample_frame.jpg"); }
 // fails
-TEST(TestSuite, pz39) { test_fail(cv::imread(IMG_DIR "pz/pz39.jpg"),
+TEST(TestSuite, pz39) { test_fail(cv::imread(vision_utils::IMG_DIR() + "pz/pz39.jpg"),
                                   PlayzoneFind::FAILURE_NO_CORNERS_FOUND); }
 
 ////////////////////////////////////////////////////////////////////////////////

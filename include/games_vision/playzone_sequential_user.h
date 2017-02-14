@@ -21,8 +21,8 @@
   */
 
 // AD
-#include "games_vision/nano_skill.h"
-#include "games_vision/nano_etts_api.h"
+#include "vision_utils/nano_skill.h"
+#include "vision_utils/nano_etts_api.h"
 //#include "vision_utils/timer.h"
 #include <games_vision/GetPlayzone.h>
 // opencv
@@ -38,7 +38,7 @@
 //#define DEBUG_PRINT(...)   ROS_INFO_THROTTLE(5, __VA_ARGS__)
 #define DEBUG_PRINT(...)   ROS_INFO(__VA_ARGS__)
 
-class PlayzoneSequentialUser: public NanoSkill {
+class PlayzoneSequentialUser: public vision_utils::NanoSkill {
 public:
   //! the possible different status
   enum Status {
@@ -372,7 +372,7 @@ private:
   Status _status;
   //! the acquired playzone - you should instead use the "ps" argument
   cv::Mat3b _playzone;
-  NanoEttsApi _etts_api;
+  vision_utils::NanoEttsApi _etts_api;
   image_transport::ImageTransport _it;
   //! controls for the playzone skill
   std::string _playzone_service, _drawer_topic;

@@ -1,4 +1,6 @@
 #include "games_vision/playzone_find_benchmark.h"
+#include "vision_utils/accessible_to_string.h"
+#include <ros/ros.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -111,23 +113,23 @@ void PlayzoneFindBenchmark::process_current_file() {
 
   // update the times
   PlayzoneFind::Times current_times = _playzone_finder.get_current_times();
-  update_timer_ntimes(_global_times.t01_after_thresh_image, _nb_files_successful,
+  vision_utils::update_timer_ntimes(_global_times.t01_after_thresh_image, _nb_files_successful,
                       current_times.t01_after_thresh_image);
-  update_timer_ntimes(_global_times.t02_after_numeroteComponents, _nb_files_successful,
+  vision_utils::update_timer_ntimes(_global_times.t02_after_numeroteComponents, _nb_files_successful,
                       current_times.t02_after_numeroteComponents);
-  update_timer_ntimes(_global_times.t03_after_compareComponents, _nb_files_successful,
+  vision_utils::update_timer_ntimes(_global_times.t03_after_compareComponents, _nb_files_successful,
                       current_times.t03_after_compareComponents);
-  update_timer_ntimes(_global_times.t04_after_getCorners, _nb_files_successful,
+  vision_utils::update_timer_ntimes(_global_times.t04_after_getCorners, _nb_files_successful,
                       current_times.t04_after_getCorners);
-  update_timer_ntimes(_global_times.t05_after_saving_images, _nb_files_successful,
+  vision_utils::update_timer_ntimes(_global_times.t05_after_saving_images, _nb_files_successful,
                       current_times.t05_after_saving_images);
-  update_timer_ntimes(_global_times.t06_after_removeBorder2, _nb_files_successful,
+  vision_utils::update_timer_ntimes(_global_times.t06_after_removeBorder2, _nb_files_successful,
                       current_times.t06_after_removeBorder2);
-  update_timer_ntimes(_global_times.t07_after_calc_warp_matrix, _nb_files_successful,
+  vision_utils::update_timer_ntimes(_global_times.t07_after_calc_warp_matrix, _nb_files_successful,
                       current_times.t07_after_calc_warp_matrix);
-  update_timer_ntimes(_global_times.t08_after_rectif_image, _nb_files_successful,
+  vision_utils::update_timer_ntimes(_global_times.t08_after_rectif_image, _nb_files_successful,
                       current_times.t08_after_rectif_image);
-  update_timer_ntimes(_global_times.t_after_everything, _nb_files_successful,
+  vision_utils::update_timer_ntimes(_global_times.t_after_everything, _nb_files_successful,
                       current_times.t_after_everything);
 
   // if we reach here still processing, it is a success !

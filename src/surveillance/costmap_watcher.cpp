@@ -64,21 +64,26 @@ In that case, it publishes an alert message.
 
 // ROS
 #include <tf/transform_listener.h>
+#include <nav_msgs/GridCells.h>
 // AD
-//#include "skill_templates/ros_vision_skill.h"
-#include "vision_utils/rgb_depth_skill.h"
-#include "vision_utils/multi_subscriber.h"
-#include "vision_utils/timer.h"
 #include "games_vision/AlertMessage.h"
-// compressed_rounded_image_transport
+#include "vision_utils/draw_ppl_on_image.h"
+#include "vision_utils/is_point_in_costmap.h"
 #include "vision_utils/sensor_cv_encodings_bridge.h"
+#include "vision_utils/print_point.h"
+#include "vision_utils/toggle_point_in_costmap.h"
+#include "vision_utils/multi_subscriber.h"
 #include "vision_utils/nan_handling.h"
+#include "vision_utils/ppl_tf_utils.h"
+#include "vision_utils/rgb_depth_skill.h"
+#include "vision_utils/sensor_cv_encodings_bridge.h"
+#include "vision_utils/timer.h"
+#include "vision_utils/costmap_to_polygon_list.h"
 // people_msgs
 #include "people_msgs/People.h"
-#include "vision_utils/draw_ppl_on_image.h"
 
 
-class CostmapWatcher : public RgbDepthSkill {
+class CostmapWatcher : public vision_utils::RgbDepthSkill {
 public:
   CostmapWatcher() :
     RgbDepthSkill("COSTMAP_WATCHER_START", "COSTMAP_WATCHER_STOP")
@@ -105,7 +110,7 @@ public:
     ROS_WARN("create_subscribers_and_publishers()");
     // subscribers
     _map_sub = _nh_public.subscribe(costmap_topic, 1, &CostmapWatcher::costmap_cb, this);
-    _ppl_subs = ros::MultiSubscriber::subscribe
+    _ppl_subs = vision_utils::MultiSubscriber::subscribe
         (_nh_public, ppl_input_topics, 10,
          &CostmapWatcher::ppl_cb, this);
 
@@ -161,7 +166,7 @@ public:
     // do not check user in costmap if list empty
     if (ppl->people.size() == 0) {
       // clear PPL for drawing
-      _ppl_image_frame.poses.clear();
+      _ppl_image_frame.people.clear();
       return;
     }
 
@@ -190,8 +195,8 @@ public:
     }
 
     // check if there is any people in the forbidden zone
-    for (unsigned int people_idx = 0; people_idx < _ppl_map_frame.poses.size(); ++people_idx) {
-      const people_msgs::Person* curr_pose = &(_ppl_map_frame.poses[people_idx]);
+    for (unsigned int people_idx = 0; people_idx < _ppl_map_frame.people.size(); ++people_idx) {
+      const people_msgs::Person* curr_pose = &(_ppl_map_frame.people[people_idx]);
       // do nothing if point not in costmap
       bool is_user_in_forbidden_area = vision_utils::is_point_in_costmap
           (curr_pose->position, _last_map);
@@ -199,21 +204,21 @@ public:
         continue;
 
       // send an alert message!
-      ros::Duration time_since_last_alert = curr_pose->header.stamp - _last_alert_stamp;
+      ros::Duration time_since_last_alert = _ppl_map_frame.header.stamp - _last_alert_stamp;
       if (time_since_last_alert.toSec() < 5) {
         ROS_WARN("There is a person in the forbidden part of the map, "
                  "but last alert was given %g seconds ago. Skipping.",
                  time_since_last_alert.toSec());
         continue;
       }
-      _last_alert_stamp = curr_pose->header.stamp;
+      _last_alert_stamp = _ppl_map_frame.header.stamp;
       ROS_WARN("The people pose (%g, %g, %g) is in the forbidden part of the map. Alerting.",
                curr_pose->position.x,
                curr_pose->position.y,
                curr_pose->position.z);
 
       games_vision::AlertMessage alert_msg;
-      alert_msg.header = curr_pose->header;
+      alert_msg.header = _ppl_map_frame.header;
       alert_msg.message = "A person has entered the forbidden part of the map!";
       alert_msg.priority = games_vision::AlertMessage::PRIORITY_WARN;
       alert_msg.etts_sentence = "|en:Do not go there!"
@@ -231,7 +236,7 @@ public:
       // load and convert imaghe
       cv_bridge::CvImage cv_image;
       _last_rgb.copyTo(cv_image.image);
-      cv_image.encoding = sensor_encoding_from_cv_encoding(cv_image.image.type());
+      cv_image.encoding = vision_utils::sensor_encoding_from_cv_encoding(cv_image.image.type());
       cv_image.toImageMsg(alert_msg.image);
       _alert_message_pub.publish(alert_msg);
     } // end loop people_idx
@@ -456,7 +461,7 @@ private:
   ros::Subscriber _map_sub;
 
   std::string ppl_input_topics;
-  ros::MultiSubscriber _ppl_subs;
+  vision_utils::MultiSubscriber _ppl_subs;
   people_msgs::People _ppl_map_frame;
   people_msgs::People _ppl_image_frame;
 

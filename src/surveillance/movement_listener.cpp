@@ -58,15 +58,15 @@ threshold
 #include <deque>            // for double ended queues
 // AD
 #include "games_vision/AlertMessage.h"
-#include "vision_utils/timer.h"
 #include "vision_utils/matrix_testing.h"
-
-
-#include "vision_utils/rgb_skill.h"
 #include "vision_utils/nano_etts_api.h"
+#include "vision_utils/rectangle_intersection.h"
+#include "vision_utils/rectangle_to_string.h"
+#include "vision_utils/rgb_skill.h"
 #include "vision_utils/sensor_cv_encodings_bridge.h"
+#include "vision_utils/timer.h"
 
-class MovementListener: public RgbSkill {
+class MovementListener: public vision_utils::RgbSkill {
 public:
   //! constructor
   MovementListener() :
@@ -183,7 +183,7 @@ public:
     // load and convert imaghe
     cv_bridge::CvImage cv_image;
     rgb.copyTo(cv_image.image);
-    cv_image.encoding = sensor_encoding_from_cv_encoding(cv_image.image.type());
+    cv_image.encoding = vision_utils::sensor_encoding_from_cv_encoding(cv_image.image.type());
     cv_image.toImageMsg(alert_msg.image);
     _alert_message_pub.publish(alert_msg);
   } // end alert_if_no_timeout();
@@ -306,7 +306,7 @@ public:
   bool is_watched_zone_set;
 
   bool is_stable;
-  Timer last_frame_stable_time;
+  vision_utils::Timer last_frame_stable_time;
 
   std::string _window1_name;
   std::string _window2_name;

@@ -69,7 +69,7 @@ social robot with a kinect camera and making use of the interface People
 #define GESTURE_LOOK_WALL "flori_look_right"
 #define GESTURE_LOOK_USER "flori_look_left"
 
-class RedLightGreenLightSkill : public NanoSkill, public RedLightGreenLight {
+class RedLightGreenLightSkill : public vision_utils::NanoSkill, public RedLightGreenLight {
 public:
 
   RedLightGreenLightSkill() : NanoSkill("RED_LIGHT_GREEN_LIGHT_SKILL_START", "RED_LIGHT_GREEN_LIGHT_SKILL_STOP"){
@@ -166,7 +166,7 @@ protected:
     std::vector<cv::Mat1f> player_depths_images;
     std::vector<unsigned int> pp_indices;
     std::vector<cv::Point> masks_offsets;
-    if (!vision_utils::vision_utils::convert(*msg, NULL, &player_depths_images, &player_masks,
+    if (!vision_utils::convert(*msg, NULL, &player_depths_images, &player_masks,
                                         &masks_offsets, &pp_indices, true)) {
       ROS_WARN("vision_utils::convert() failed!");
       return;
@@ -175,7 +175,7 @@ protected:
 
     // get names
     std::vector<RedLightGreenLight::PlayerName> player_names;
-    vision_utils::vision_utils::indices2names(*msg, pp_indices, player_names);
+    vision_utils::indices2names(*msg, pp_indices, player_names);
     // convert player_depths_images -> player_depths
     std::vector<RedLightGreenLight::PlayerDistance> player_distances(nplayers);
     for (unsigned int i = 0; i < nplayers; ++i) {
@@ -234,7 +234,7 @@ protected:
   //////////////////////////////////////////////////////////////////////////////
 
   ros::Publisher _keyframe_gesture_pub;
-  NanoEttsApi _etts_api;
+  vision_utils::NanoEttsApi _etts_api;
   ros::Subscriber _ppl_sub;
   std::string _ppl_topic;
   ros::Time _wall_time_start;

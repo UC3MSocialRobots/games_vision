@@ -38,15 +38,15 @@ int main(int argc, char** argv) {
 
   else if (choice == 2)
     test_skill(argc, argv, PlayzoneTrackSkill::MODE_REPROJECT_IMAGE,
-               IMG_DIR "powerXML/power2.png");
+               vision_utils::IMG_DIR()+"powerXML/power2.png");
 
   else if (choice == 3)
     test_skill(argc, argv, PlayzoneTrackSkill::MODE_REPROJECT_IMAGE,
-               IMG_DIR "frenadol.png");
+               vision_utils::IMG_DIR()+"frenadol.png");
 
   else if (choice == 4)
     test_skill(argc, argv, PlayzoneTrackSkill::MODE_REPROJECT_VIDEO,
-               IMG_DIR "snoopy.avi");
+               vision_utils::IMG_DIR()+"snoopy.avi");
   return 0;
 }
 
