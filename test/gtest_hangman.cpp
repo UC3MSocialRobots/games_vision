@@ -79,32 +79,31 @@ TEST(TestSuite, exchange) {
   std::string answerFinder;
   std::vector<unsigned int> posHanger;
 
-  HangmanSolver hs;
-  hs.init(HangmanSolver::ROLE_FINDER, 8, PATH_ALPHABET_ES, PATH_DICTIONNARY_ES);
-  HangmanSolver hs2;
-  hs2.init(HangmanSolver::ROLE_HANGER, 8, PATH_ALPHABET_ES, PATH_DICTIONNARY_ES);
+  HangmanSolver finder, hanger;
+  finder.init(HangmanSolver::ROLE_FINDER, 8, PATH_ALPHABET_ES, PATH_DICTIONNARY_ES);
+  hanger.init(HangmanSolver::ROLE_HANGER, 8, PATH_ALPHABET_ES, PATH_DICTIONNARY_ES);
 
   int nbSteps = 0;
 
-  while ( hs2.get_game_status() == HangmanSolver::GAME_RUNNING ) {
+  while ( hanger.get_game_status() == HangmanSolver::GAME_RUNNING ) {
     std::cout << "*******************************************" << std::endl;
     if (nbSteps > 0)
-      hs.finder_receive_data_from_hanger( hanger_type, posHanger );
-    hs.finder_compute_next_guess();
-    hs.display_word_letters_status();
-    std::cout << "hs.get_number_of_possible_words():" << hs.get_number_of_possible_words() << std::endl;
-    if (hs.get_number_of_possible_words() < 100) hs.display_all_possible_words();
-    hs.finder_get_answer( finder_type, answerFinder );
+      finder.finder_receive_data_from_hanger( hanger_type, posHanger );
+    finder.finder_compute_next_guess();
+    finder.display_word_letters_status();
+    std::cout << "hs.get_number_of_possible_words():" << finder.get_number_of_possible_words() << std::endl;
+    if (finder.get_number_of_possible_words() < 100) finder.display_all_possible_words();
+    finder.finder_get_answer( finder_type, answerFinder );
 
     //cout << std::endl;
-    hs2.hanger_receive_data_from_finder( finder_type, answerFinder);
-    hs2.hanger_get_answer( hanger_type, posHanger);
+    hanger.hanger_receive_data_from_finder( finder_type, answerFinder);
+    hanger.hanger_get_answer( hanger_type, posHanger);
     nbSteps++;
   }
 
-  std::cout << "status:" << HangmanSolver::game_status2string(hs2.get_game_status())
+  std::cout << "status:" << HangmanSolver::game_status2string(hanger.get_game_status())
             << " - steps:" << nbSteps
-            << " - failures:" << hs.get_number_of_failures() << std::endl;
+            << " - failures:" << finder.get_number_of_failures() << std::endl;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
