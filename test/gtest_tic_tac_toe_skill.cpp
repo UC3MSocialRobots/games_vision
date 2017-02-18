@@ -34,9 +34,8 @@ ________________________________________________________________________________
 //#define DISPLAY
 
 ////////////////////////////////////////////////////////////////////////////////
-#if 0
+
 TEST(TestSuite, ctor) {
-  if (!vision_utils::rosmaster_alive()) return;
   TicTacToeSkill tictac;
   ASSERT_FALSE(tictac.has_playzone_service());
   ASSERT_FALSE(tictac.is_playzone_detection_success());
@@ -47,20 +46,18 @@ TEST(TestSuite, ctor) {
 ////////////////////////////////////////////////////////////////////////////////
 
 TEST(TestSuite, no_PlayzoneFind) {
-  if (!vision_utils::rosmaster_alive()) return;
   ros::NodeHandle nh_public;
   ros::AsyncSpinner spinner(0);
   spinner.start();
   TicTacToeSkill tictac;
   tictac.start(); // create_subscribers_and_publishers() contains a sleep(1)
   ASSERT_FALSE(tictac.has_playzone_service()); // no PlayzoneFind
+  ASSERT_TRUE_TIMEOUT(tictac.get_status() == PlayzoneSequentialUser::NEVER_RUN, 1);
 
   // start the foo skill to try and obtain the pz
-  ros::Publisher tocado_pub = nh_public.advertise<std_msgs::Int16>("TOCADO", 1);
-  std_msgs::Int16 tocado_msg;
-  tocado_msg.data = 1;
-  tocado_pub.publish(tocado_msg);
-  ASSERT_TRUE_TIMEOUT(tictac.get_status() == PlayzoneSequentialUser::NEVER_RUN, 1);
+  ros::Publisher touch_pub = nh_public.advertise<std_msgs::String>("capacitive_touch", 1);
+  std_msgs::String touch_msg;
+  touch_pub.publish(touch_msg);
   ASSERT_TRUE_TIMEOUT(tictac.get_status() == PlayzoneSequentialUser::FAILURE_NO_PZ, 10);
   ASSERT_FALSE(tictac.is_playzone_detection_success());
   ASSERT_FALSE(tictac.is_playzone_processing_success());
@@ -79,10 +76,9 @@ TEST(TestSuite, comm_with_pz_finder_no_img) {
   ASSERT_TRUE(tictac.has_playzone_service());
 
   // start the foo skill to try and obtain the pz
-  ros::Publisher tocado_pub = nh_public.advertise<std_msgs::Int16>("TOCADO", 1);
-  std_msgs::Int16 tocado_msg;
-  tocado_msg.data = 1;
-  tocado_pub.publish(tocado_msg);
+  ros::Publisher touch_pub = nh_public.advertise<std_msgs::String>("capacitive_touch", 1);
+  std_msgs::String touch_msg;
+  touch_pub.publish(touch_msg);
   ASSERT_TRUE_TIMEOUT(tictac.get_status() == PlayzoneSequentialUser::NEVER_RUN, 1);
   ASSERT_TRUE_TIMEOUT(tictac.get_status() == PlayzoneSequentialUser::FAILURE_NO_PZ, 10);
   ASSERT_FALSE(tictac.is_playzone_detection_success());
@@ -101,15 +97,15 @@ void test_single_img(const std::string & filename,
   // create pubs / subs
   PlayzoneFindSkill pz_finder;
   TicTacToeSkill tictac;
-  ros::Publisher tocado_pub = nh_public.advertise<std_msgs::Int16>("TOCADO", 1);
+  ros::Publisher touch_pub = nh_public.advertise<std_msgs::String>("capacitive_touch", 1);
   image_transport::ImageTransport transport(nh_public);
   image_transport::Publisher rgb_pub = transport.advertise(pz_finder.get_image_topic(), 1, false); // no latch
   // start the playzone tictac
   tictac.start(); // create_subscribers_and_publishers() contains a sleep(1)
   ASSERT_TRUE(tictac.has_playzone_service());
   // start the foo skill to try and obtain the pz
-  std_msgs::Int16 tocado_msg;
-  tocado_pub.publish(tocado_msg);
+  std_msgs::String touch_msg;
+  touch_pub.publish(touch_msg);
   // publish image
   cv_bridge::CvImage rgb_bridge;
   rgb_bridge.image = cv::imread(filename, CV_LOAD_IMAGE_COLOR);
@@ -138,17 +134,19 @@ void test_single_img(const std::string & filename,
 }
 
 TEST(TestSuite, test_single_no_tic_tac_toe_game) {
-  test_single_img(IMG_DIR "pz/pz01.jpg", PlayzoneSequentialUser::FAILURE_PROCESSING_FAILED);
+  test_single_img(vision_utils::IMG_DIR()+"pz/pz01.jpg",
+                  PlayzoneSequentialUser::FAILURE_PROCESSING_FAILED);
 }
 TEST(TestSuite, test_single_empty_grid) {
-  test_single_img(IMG_DIR "pz/pz40.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED,
+  test_single_img(vision_utils::IMG_DIR()+"pz/pz40.jpg",
+                  PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED,
                   "---------");
 }
 TEST(TestSuite, test_single_full_grid) {
-  test_single_img(IMG_DIR "tictactoe/sample_frame.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED,
+  test_single_img(vision_utils::IMG_DIR()+"tictactoe/sample_frame.jpg",
+                  PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED,
                   "XO-OOXXXO");
 }
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
