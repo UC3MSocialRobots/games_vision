@@ -64,8 +64,8 @@ public:
     _playzone.setTo(0);
     _playzone.copyTo(_playzone_illus);
     _playzone.copyTo(_playzone_modified_for_drawer);
-    _playzone_topic = "playzone";
-    _nh_private.param("playzone_topic", _playzone_topic, _playzone_topic);
+    _playzone_service = "get_playzone";
+    _nh_private.param("playzone_service", _playzone_service, _playzone_service);
     _drawer_topic = "drawer_in";
     _nh_private.param("drawer_topic", _drawer_topic, _drawer_topic);
     _status = NEVER_RUN;
@@ -126,7 +126,7 @@ public:
       bool ok = _pz_client.call(srv.request, srv.response);
       // if not obtained, die!
       if (!ok) {
-        ROS_FATAL("Could not get PZ on '%s', dying, argh!", _playzone_topic.c_str());
+        ROS_FATAL("Could not get PZ on '%s', dying, argh!", _playzone_service.c_str());
         consecutive_failures++;
         continue;
       }
@@ -192,8 +192,8 @@ public:
     cv::waitKey(100);
   }
 
-  inline void set_playzone_topic(const std::string & topic) { _playzone_topic = topic; }
-  inline std::string get_playzone_topic() const { return _playzone_topic; }
+  inline void set_playzone_service(const std::string & service) { _playzone_service = service; }
+  inline std::string get_playzone_service() const { return _playzone_service; }
 
   inline void set_drawer_topic(const std::string & topic) { _drawer_topic = topic; }
   inline std::string get_drawer_topic() const { return _drawer_topic; }
@@ -246,7 +246,7 @@ private:
     DEBUG_PRINT("create_subscribers_and_publishers()");
 
     // advertise events
-    _pz_client =  _nh_public.serviceClient<games_vision::GetPlayzone>("get_playzone");
+    _pz_client =  _nh_public.serviceClient<games_vision::GetPlayzone>(_playzone_service);
     _camera_blocker_start_pub = _nh_public.advertise<std_msgs::Int16>("CAMERA_BLOCKER_SKILL_START", 1);
     _camera_blocker_stop_pub = _nh_public.advertise<std_msgs::Int16>("CAMERA_BLOCKER_SKILL_STOP", 1);
     // node_double_screen_4D.cpp
@@ -375,7 +375,7 @@ private:
   vision_utils::NanoEttsApi _etts_api;
   image_transport::ImageTransport _it;
   //! controls for the playzone skill
-  std::string _playzone_topic, _drawer_topic;
+  std::string _playzone_service, _drawer_topic;
   ros::ServiceClient _pz_client;
   //! controls for the drawer
   ros::Publisher _drawer_start_pub, _drawer_stop_pub;

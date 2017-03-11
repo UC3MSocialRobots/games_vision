@@ -82,7 +82,7 @@ public:
 TEST(TestSuite, ctor) {
   if (!vision_utils::rosmaster_alive()) return;
   FooPlayzoneSequentialUser playzone_user;
-  ASSERT_FALSE(playzone_user.has_playzone_service());
+  ASSERT_FALSE(playzone_user.can_have_playzone());
   ASSERT_FALSE(playzone_user.is_playzone_detection_success());
   ASSERT_FALSE(playzone_user.is_playzone_processing_success());
   ASSERT_TRUE(playzone_user.get_status() == PlayzoneSequentialUser::NEVER_RUN);
@@ -97,7 +97,7 @@ TEST(TestSuite, no_PlayzoneFind) {
   spinner.start();
   FooPlayzoneSequentialUser playzone_user;
   playzone_user.start(); // create_subscribers_and_publishers() contains a sleep(1)
-  ASSERT_FALSE(playzone_user.has_playzone_service()); // no PlayzoneFind
+  ASSERT_FALSE(playzone_user.can_have_playzone()); // no PlayzoneFind
 
   // start the foo skill to try and obtain the pz
   ros::Publisher action_pub = nh_public.advertise<std_msgs::Int16>("FOO_ACTION", 1);
@@ -120,7 +120,7 @@ TEST(TestSuite, comm_with_pz_finder_no_img) {
   PlayzoneFindSkill pz_finder;
   FooPlayzoneSequentialUser playzone_user;
   playzone_user.start(); // create_subscribers_and_publishers() contains a sleep(1)
-  ASSERT_TRUE(playzone_user.has_playzone_service());
+  ASSERT_TRUE(playzone_user.can_have_playzone());
 
   // start the foo skill to try and obtain the pz
   ros::Publisher action_pub = nh_public.advertise<std_msgs::Int16>("FOO_ACTION", 1);
@@ -149,7 +149,7 @@ void test_single_img(const std::string & filename,
   image_transport::Publisher rgb_pub = transport.advertise(pz_finder.get_image_topic(), 1, true); // latch
   // start the playzone user
   playzone_user.start(); // create_subscribers_and_publishers() contains a sleep(1)
-  ASSERT_TRUE(playzone_user.has_playzone_service());
+  ASSERT_TRUE(playzone_user.can_have_playzone());
   // start the foo skill to try and obtain the pz
   std_msgs::Int16 action_msg;
   action_pub.publish(action_msg);
