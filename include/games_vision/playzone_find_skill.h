@@ -12,6 +12,7 @@
 #include "vision_utils/nano_etts_api.h"
 // games_vision
 #include "games_vision/playzone_find.h"
+#include "games_vision/GetPlayzone.h"
 
 /*! \class  PlayzoneFindSkill
  *
@@ -26,16 +27,22 @@ public:
 
   virtual void create_subscribers_and_publishers();
   virtual void shutdown_subscribers_and_publishers();
-  //! implementation of the AdVoiceSkill virtual function
-  // virtual void proceso();
 
-  void find_playzone(const std_msgs::Int16ConstPtr &msg);
+  void playzone_cb(const std_msgs::Int16ConstPtr &msg);
+  bool playzone_service(games_vision::GetPlayzone::Request &request,
+                        games_vision::GetPlayzone::Response &response);
 
   inline std::string get_image_topic() const {
     return _image_resolved_topic;
   }
-  inline std::string get_playzone_service() const {
+  inline std::string get_playzone_topic() const {
     return _pz_pub.getTopic();
+  }
+  inline void set_playzone_service(const std::string & service) {
+    _pz_service = service;
+  }
+  inline std::string get_playzone_service() const {
+    return _pz_server.getService();
   }
 
   void display() {
@@ -52,13 +59,14 @@ protected:
   vision_utils::NanoEttsApi _etts_api;
 
   ros::Subscriber _pz_analyze_sub;
-  std::string _image_resolved_topic;
+  std::string _image_resolved_topic, _pz_service;
   PlayzoneFind _pz_finder;
   cv::Mat3b _rgb;
   bool _playzone_success;
 
   image_transport::ImageTransport _it;
   image_transport::Publisher _pz_pub;
+  ros::ServiceServer _pz_server;
   cv_bridge::CvImage _pz_msg;
 
   //! the publisher for gestures

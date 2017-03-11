@@ -37,7 +37,7 @@ ________________________________________________________________________________
 
 TEST(TestSuite, ctor) {
   TicTacToeSkill tictac;
-  ASSERT_FALSE(tictac.has_playzone_service());
+  ASSERT_FALSE(tictac.can_have_playzone());
   ASSERT_FALSE(tictac.is_playzone_detection_success());
   ASSERT_FALSE(tictac.is_playzone_processing_success());
   ASSERT_TRUE(tictac.get_status() == PlayzoneSequentialUser::NEVER_RUN);
@@ -51,7 +51,7 @@ TEST(TestSuite, no_PlayzoneFind) {
   spinner.start();
   TicTacToeSkill tictac;
   tictac.start(); // create_subscribers_and_publishers() contains a sleep(1)
-  ASSERT_FALSE(tictac.has_playzone_service()); // no PlayzoneFind
+  ASSERT_FALSE(tictac.can_have_playzone()); // no PlayzoneFind
   ASSERT_TRUE_TIMEOUT(tictac.get_status() == PlayzoneSequentialUser::NEVER_RUN, 1);
 
   // start the foo skill to try and obtain the pz
@@ -71,9 +71,10 @@ TEST(TestSuite, comm_with_pz_finder_no_img) {
   ros::AsyncSpinner spinner(0);
   spinner.start();
   PlayzoneFindSkill pz_finder;
+  pz_finder.start();
   TicTacToeSkill tictac;
   tictac.start(); // create_subscribers_and_publishers() contains a sleep(1)
-  ASSERT_TRUE(tictac.has_playzone_service());
+  ASSERT_TRUE_TIMEOUT(tictac.can_have_playzone(), 1);
 
   // start the foo skill to try and obtain the pz
   ros::Publisher touch_pub = nh_public.advertise<std_msgs::String>("capacitive_touch", 1);
@@ -102,7 +103,7 @@ void test_single_img(const std::string & filename,
   image_transport::Publisher rgb_pub = transport.advertise(pz_finder.get_image_topic(), 1, false); // no latch
   // start the playzone tictac
   tictac.start(); // create_subscribers_and_publishers() contains a sleep(1)
-  ASSERT_TRUE(tictac.has_playzone_service());
+  ASSERT_TRUE(tictac.can_have_playzone());
   // start the foo skill to try and obtain the pz
   std_msgs::String touch_msg;
   touch_pub.publish(touch_msg);
@@ -165,8 +166,8 @@ TEST(TestSuite, pingpong) {
   ping.start();
   pong.start();
   ros::spinOnce();
-  ASSERT_TRUE(ping.has_playzone_service());
-  ASSERT_TRUE(pong.has_playzone_service());
+  ASSERT_TRUE(ping.can_have_playzone());
+  ASSERT_TRUE(pong.can_have_playzone());
   int nspins = 0;
   while(nspins++ < 10) {
     printf("\n\nnspins:%i\n", nspins);

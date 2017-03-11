@@ -1,8 +1,5 @@
 #include "games_vision/playzone_find_skill.h"
-
-
-// gesture_player
-//#include <gesture_definitions.h>
+// gesture_synchronizer
 #include <std_msgs/String.h>
 
 #define DEBUG_PRINT(...)   {}
@@ -18,6 +15,7 @@ PlayzoneFindSkill::PlayzoneFindSkill(const int BOARD_OUT_WIDTH_ /* = 400 */,
 {
   std::string image_topic = "rgb";
   _nh_private.param("image_topic", image_topic, image_topic);
+  _pz_service = "get_playzone";
   _image_resolved_topic = _nh_public.resolveName(image_topic);
   printf("PlayzoneFindSkill: getting color images on '%s'\n",
          _image_resolved_topic.c_str());
@@ -50,14 +48,16 @@ void PlayzoneFindSkill::create_subscribers_and_publishers() {
 
   // subscribe to the topic for finding playzone
   _pz_analyze_sub = _nh_public.subscribe("FIND_PLAYZONE_ANALYZE", 1,
-                                         &PlayzoneFindSkill::find_playzone, this);
+                                         &PlayzoneFindSkill::playzone_cb, this);
 
   // advertise gesture publisher
   _gesture_pub = _nh_public.advertise<std_msgs::String>
-      //(gesture_player::gesture_filename_topic, 1);
+      //(gesture_synchronizer::gesture_filename_topic, 1);
                  ("keyframe_gesture_filename", 1);
 
-  _pz_pub = _it.advertise("PLAYZONE", 1);
+  _pz_pub = _it.advertise("playzone", 1);
+  _pz_server= _nh_public.advertiseService
+      (_pz_service, &PlayzoneFindSkill::playzone_service, this);
   _etts_api.advertise();
   // look at the table
   std_msgs::String gesture_name; gesture_name.data = "flori_look_table_mute";
@@ -77,7 +77,7 @@ void PlayzoneFindSkill::shutdown_subscribers_and_publishers() {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-void PlayzoneFindSkill::find_playzone(const std_msgs::Int16ConstPtr & msg) {
+void PlayzoneFindSkill::playzone_cb(const std_msgs::Int16ConstPtr & msg) {
   bool speak = msg->data > 0;
   DEBUG_PRINT("PlayzoneFindSkill:find_playzone(speak:%i)\n", speak);
 
@@ -120,4 +120,12 @@ void PlayzoneFindSkill::find_playzone(const std_msgs::Int16ConstPtr & msg) {
 
   if (speak)
     sayResult(_pz_finder.get_corner_successful_method_number(), timer.getTimeMilliseconds());
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+bool PlayzoneFindSkill::playzone_service(games_vision::GetPlayzone::Request &request,
+                                         games_vision::GetPlayzone::Response& response) {
+  ROS_FATAL("Not implemented");
+  return false;
 } // end find_playzone();
