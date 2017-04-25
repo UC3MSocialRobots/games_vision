@@ -23,7 +23,7 @@ public:
 
     /*! create an annotator from loading an xml file
       \param path_to_xml_file it should finish with /
-      Example IMG_DIR "pz/"
+      Example PLAYZONE_DIR
       \param xml_filename Example foo.xml
       */
     PlayzoneFindBenchmark(const std::string & path_to_xml_file,

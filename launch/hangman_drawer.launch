@@ -5,7 +5,7 @@
   <param name="language" value="es"/>
 
   <!-- tictactoe -->
-  <remap from="drawer_in" to="drawer/in"/>
+  <remap from="drawer_out" to="drawer/in"/>
   <remap from="drawer_out" to="drawer/out"/>
   <node pkg="games_vision" type="launcher_hangman.exe"
         name="hangman"  output="screen"

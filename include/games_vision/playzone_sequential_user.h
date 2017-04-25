@@ -66,8 +66,10 @@ public:
     _playzone.copyTo(_playzone_modified_for_drawer);
     _playzone_service = "get_playzone";
     _nh_private.param("playzone_service", _playzone_service, _playzone_service);
-    _drawer_topic = "drawer_in";
-    _nh_private.param("drawer_topic", _drawer_topic, _drawer_topic);
+    _drawer_out_topic = "drawer_out";
+    _nh_private.param("drawer_out_topic", _drawer_out_topic, _drawer_out_topic);
+    _drawer_in_topic = "drawer_in";
+    _nh_private.param("drawer_in_topic", _drawer_in_topic, _drawer_in_topic);
     _status = NEVER_RUN;
   }
 
@@ -130,9 +132,15 @@ public:
         consecutive_failures++;
         continue;
       }
-      bool pz_valid = (srv.response.success && srv.response.playzone.width > 0);
+      bool pz_valid = (srv.response.success
+                       && srv.response.playzone.width > 0
+                       && srv.response.playzone.height > 0);
       if (!pz_valid) {
-        ROS_WARN(" INVALID pz received while waiting for it!");
+        ROS_WARN("INVALID pz received while waiting for it! "
+                 "success:%i, size:%ix%i",
+                 srv.response.success,
+                 srv.response.playzone.width,
+                 srv.response.playzone.height);
         consecutive_failures++;
         continue;
       }
@@ -178,8 +186,12 @@ public:
     return _status == SUCCESS_FOUND_AND_PROCESSED;
   }
 
-  inline bool can_have_playzone() {
+  inline bool can_have_playzone() /*const*/ {
+    // "exists()" is not const, so the function cannot have const qualifier
     return _pz_client.exists();
+  }
+  inline bool can_have_drawer() const {
+    return _drawer_sub.getNumPublishers() > 0;
   }
 
   //! \return the status of the playzone detection
@@ -195,12 +207,14 @@ public:
   inline void set_playzone_service(const std::string & service) { _playzone_service = service; }
   inline std::string get_playzone_service() const { return _playzone_service; }
 
-  inline void set_drawer_topic(const std::string & topic) { _drawer_topic = topic; }
-  inline std::string get_drawer_topic() const { return _drawer_topic; }
+  inline void set_drawer_in_topic(const std::string & t) { _drawer_in_topic = t; }
+  inline std::string get_drawer_in_topic() const { return _drawer_in_topic; }
+
+  inline void set_drawer_out_topic(const std::string & t) { _drawer_out_topic = t; }
+  inline std::string get_drawer_out_topic() const { return _drawer_out_topic; }
 
 protected:
 
-  //! shut up as soon as possible
   inline void say_text(const std::string & sentence) {
     _etts_api.say_text(sentence);
   }
@@ -257,13 +271,13 @@ private:
         ("keyframe_gesture_filename", 1);
     _drawer_start_pub = _nh_public.advertise<std_msgs::Int16>("DRAWER_START", 1);
     _drawer_stop_pub = _nh_public.advertise<std_msgs::Int16>("DRAWER_STOP", 1);
-    _drawer_pub = _it.advertise(_drawer_topic, 1);
+    _drawer_pub = _it.advertise(_drawer_out_topic, 1);
     _etts_api.advertise();
 
     // subscribers
     touch_sub = _nh_public.subscribe<std_msgs::String>
         ("capacitive_touch", 1, &PlayzoneSequentialUser::touch_cb, this);
-    _drawer_sub = _it.subscribe("drawer_out", 1, &PlayzoneSequentialUser::drawer_cb, this);
+    _drawer_sub = _it.subscribe(_drawer_in_topic, 1, &PlayzoneSequentialUser::drawer_cb, this);
     // call the child create_subscribers_and_publishers_playzone()
     create_subscribers_and_publishers_playzone();
 
@@ -361,6 +375,8 @@ private:
   //! share the image for an eventual drawer
   void send_playzone_out_to_drawer() {
     DEBUG_PRINT("send_playzone_out_to_drawer()");
+    if (!_drawer_pub.getNumSubscribers())
+      return;
     _playzone_modified_for_drawer.copyTo(_drawer_bg_msg.image);
     _drawer_bg_msg.encoding = sensor_msgs::image_encodings::BGR8;
     _drawer_bg_msg.header.stamp = ros::Time::now();
@@ -375,7 +391,7 @@ private:
   vision_utils::NanoEttsApi _etts_api;
   image_transport::ImageTransport _it;
   //! controls for the playzone skill
-  std::string _playzone_service, _drawer_topic;
+  std::string _playzone_service, _drawer_in_topic, _drawer_out_topic;
   ros::ServiceClient _pz_client;
   //! controls for the drawer
   ros::Publisher _drawer_start_pub, _drawer_stop_pub;

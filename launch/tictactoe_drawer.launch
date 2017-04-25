@@ -3,9 +3,9 @@
 
 <group ns="$(arg robot)">
   <param name="language" value="es"/>
-  
+
   <!-- tictactoe -->
-  <remap from="drawer_in" to="drawer/in"/>
+  <remap from="drawer_out" to="drawer/in"/>
   <remap from="drawer_out" to="drawer/out"/>
   <node pkg="games_vision" type="launcher_tic_tac_toe_skill.exe"
         name="tictactoe"  output="screen"
@@ -15,7 +15,7 @@
 
   <!-- TTS -->
   <remap from="tts" to="ETTS_SAY_PLAIN_TEXT" />
-  <node pkg="games_vision" type="picotts.exe"
+  <node pkg="picotts" type="picotts.exe"
         name="picotts"  output="screen" />
 
   <!-- drawer -->

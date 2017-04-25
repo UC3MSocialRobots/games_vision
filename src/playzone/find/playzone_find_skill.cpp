@@ -137,8 +137,8 @@ void PlayzoneFindSkill::playzone_cb(const std_msgs::Int16ConstPtr & msg) {
 bool PlayzoneFindSkill::playzone_service(games_vision::GetPlayzone::Request &/*request*/,
                                          games_vision::GetPlayzone::Response& response) {
   bool ok = find_playzone(false);
+  response.success = ok;
   if (!ok) {
-    response.success = false;
     return true;
   }
   _playzone_msg.toImageMsg(response.playzone);

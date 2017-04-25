@@ -30,6 +30,9 @@
 #include "games_vision/corner_finder.h"
 #include "vision_utils/disjoint_sets2.h"
 
+#define GAMES_DATA_DIR   ros::package::getPath("games_vision") + "/data/"
+#define PLAYZONE_DIR     GAMES_DATA_DIR + "playzone/"
+
 #ifdef PZ_FIND_VIDEOS
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/highgui/highgui_c.h>

@@ -169,15 +169,19 @@ void PlayzoneFind::find_playzone_init() {
 
   /* define model_points with the non null pts */
   std::vector<std::string> model_image_filenames;
-  model_image_filenames.push_back(vision_utils::IMG_DIR() + "board/shape_flat.png");
+  model_image_filenames.push_back(PLAYZONE_DIR + "board/shape_flat.png");
 #ifdef USE_TWO_PATTERNS
-  model_image_filenames.push_back(vision_utils::IMG_DIR() + "board/shape_twist.png");
+  model_image_filenames.push_back(PLAYZONE_DIR + "board/shape_twist.png");
 #endif // USE_TWO_PATTERNS
 
   model_points.clear();
   for(std::vector<std::string>::const_iterator file = model_image_filenames.begin();
       file != model_image_filenames.end() ; ++file) {
     cv::Mat1b model_image = cv::imread(*file, CV_LOAD_IMAGE_GRAYSCALE);
+    if (model_image.empty()) {
+      printf("Fatal error:: could not load '%s'!\n", file->c_str());
+      exit(-1);
+    }
     model_size = cv::Rect(0, 0, model_image.cols, model_image.rows);
 #ifdef USE_CONTOURS
     std::vector<std::vector<cv::Point> > comps;

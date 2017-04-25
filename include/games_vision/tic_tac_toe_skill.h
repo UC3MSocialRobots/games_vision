@@ -18,6 +18,8 @@
 #include "games_vision/tic_tac_toe_solver.h"
 #include "vision_utils/image_comparer.h"
 
+#define TICTACTOE_DIR  ros::package::getPath("games_vision") + "/data/tictactoe/"
+
 class TicTacToeSkill: public PlayzoneSequentialUser {
 public:
   static const double DISTANCE_MAX_BEFORE_D2 = 1.5;

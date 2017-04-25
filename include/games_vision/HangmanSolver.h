@@ -26,7 +26,7 @@
 #include <vector>           // for vectors
 
 #include <vision_utils/img_path.h>
-#define HANGMAN_DIR          vision_utils::IMG_DIR() + "hangman/"
+#define HANGMAN_DIR          ros::package::getPath("games_vision") + "/data/hangman/"
 #define PATH_ALPHABET_EN     HANGMAN_DIR "english.alphabet"
 #define PATH_DICTIONNARY_EN  HANGMAN_DIR "english.dict"
 #define PATH_ALPHABET_ES     HANGMAN_DIR "spanish.alphabet"

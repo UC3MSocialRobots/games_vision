@@ -178,29 +178,29 @@ void test_single_img(const std::string & filename,
 
 // failures
 TEST(TestSuite, test_single_img_nopz) {
-  test_single_img(vision_utils::IMG_DIR() + "balloon.png", PlayzoneSequentialUser::FAILURE_NO_PZ);
+  test_single_img(PLAYZONE_DIR + "balloon.png", PlayzoneSequentialUser::FAILURE_NO_PZ);
 }
 TEST(TestSuite, test_single_img39) {
-  test_single_img(vision_utils::IMG_DIR() + "pz/pz39.jpg", PlayzoneSequentialUser::FAILURE_NO_PZ);
+  test_single_img(PLAYZONE_DIR + "pz39.jpg", PlayzoneSequentialUser::FAILURE_NO_PZ);
 }
 //successes
 TEST(TestSuite, test_single_img01) {
-  test_single_img(vision_utils::IMG_DIR() + "pz/pz01.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
+  test_single_img(PLAYZONE_DIR + "pz01.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
 }
 TEST(TestSuite, test_single_img08) {
-  test_single_img(vision_utils::IMG_DIR() + "pz/pz08.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
+  test_single_img(PLAYZONE_DIR + "pz08.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
 }
 TEST(TestSuite, test_single_img09) {
-  test_single_img(vision_utils::IMG_DIR() + "pz/pz09.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
+  test_single_img(PLAYZONE_DIR + "pz09.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
 }
 TEST(TestSuite, test_single_img10) {
-  test_single_img(vision_utils::IMG_DIR() + "pz/pz10.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
+  test_single_img(PLAYZONE_DIR + "pz10.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
 }
 TEST(TestSuite, test_single_img11) {
-  test_single_img(vision_utils::IMG_DIR() + "pz/pz11.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
+  test_single_img(PLAYZONE_DIR + "pz11.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
 }
 TEST(TestSuite, test_single_img12) {
-  test_single_img(vision_utils::IMG_DIR() + "pz/pz12.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
+  test_single_img(PLAYZONE_DIR + "pz12.jpg", PlayzoneSequentialUser::SUCCESS_FOUND_AND_PROCESSED);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

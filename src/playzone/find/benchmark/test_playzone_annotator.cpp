@@ -1,10 +1,10 @@
 #include "games_vision/playzone_annotator.h"
-#include <vision_utils/img_path.h>
+#include "games_vision/playzone_find_skill.h"
 #include <ros/ros.h>
 
 void test_interface() {
   PlayzoneAnnotator annotator;
-  annotator.from_xml_file(vision_utils::IMG_DIR()+"pz/", "pz.xml");
+  annotator.from_xml_file(PLAYZONE_DIR, "pz.xml");
 }
 
 int main() {
