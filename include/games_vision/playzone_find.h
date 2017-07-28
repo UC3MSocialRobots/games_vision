@@ -30,6 +30,7 @@
 #include "games_vision/corner_finder.h"
 #include "vision_utils/disjoint_sets2.h"
 
+#include <ros/package.h>
 #define GAMES_DATA_DIR   ros::package::getPath("games_vision") + "/data/"
 #define PLAYZONE_DIR     GAMES_DATA_DIR + "playzone/"
 
